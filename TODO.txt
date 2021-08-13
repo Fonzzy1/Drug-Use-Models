@@ -1,0 +1,10 @@
+Timespan of drug use, pr(addicted) = f(time addicted), could be done as categoires
+
+Iplementation of drug enforcement, economic pressues
+
+indexed model rather than contiuous
+
+Find purpose - what are we trying to find
+
+community clumping?
+
