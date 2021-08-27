@@ -3,50 +3,186 @@
 - The normal SIR model assumes that recovered people cannot return to the infected category, this is not the case with drug use, where relapse is prevalent
 - Change is limited to day by day
 - the rate of movement between groups is linear such that:
-$$ \frac{ds}{dt} = -a \cdot s $$
-$$ \frac{di}{dt} = a \cdot s + b \cdot r - c  \cdot i $$
-$$ \frac{dr}{dt} =  -b \cdot r + c \cdot i $$
+$$ \frac{ds}{dt} = -a s i$$
+$$ \frac{di}{dt} = a s i + b r i - c  i $$
+$$ \frac{dr}{dt} =  -b r i + c i $$
 It can be seen then:
-$$ \frac{dr}{dt} + \frac{dr}{dt} + \frac{dr}{dt} = 0 $$
+$$ \frac{ds}{dt} + \frac{di}{dt} + \frac{dr}{dt} = 0 $$
 
 ## Parameters:
-a - rate people move from susceptible to infected as portion of total people
-b - rate people move from recovered to infected as portion of total people
+a - rate people move from susceptible to infected, based on interactions between susceptible and infected
+
+b - rate people move from recovered to infected as portion of total people, based on interactions with infected people
+
 c - rate people move from infected to recovered as portion of total people
 
-- This model is iterative, meaning $x_{n+1} = A \cdot x_n$, which can then be expanded over time.
+This model is iterative, meaning $x_{n+1} = A x_n$, which can then be expanded over time.
 
-```{python}
+```{python, output = FALSE}
 import numpy as np
 import pandas
 import matplotlib.pyplot as plt
 pop_init = 1000
-
-a = 0.001
-b = 0.1
+pop_add = 200
+a = 0.01
+b = 0.01
 c = 0.5
 
-steps = 1000
+steps = 10
 
-vect_initial = np.array([pop_init,0,0]).T # vector of day index, suseptable, infected and recovered people
+vect_initial = np.array([pop_init - pop_add,pop_add,0]).T # vector of day index, suseptable, infected and recovered people
 
-matrix_step = np.array([ [1-a,0,0],
-                        [a,1-c,b],
-                        [0,c,1-b]])
-                        
-                        
 output = pandas.DataFrame(columns = ['day', 's', 'i', 'r'])
-i = 0
+j = 0
 vect = vect_initial.copy()
 
-while i < steps:
-    output.loc[i] = np.concatenate((np.array([i]),vect.T))
-    vect = np.matmul(matrix_step,vect)
-    i+=1
+while j < steps:
+    vectplus1 = np.zeros([3])
+    s = vect[0]
+    i = vect[1]
+    r = vect[2]
+    vectplus1[0] = s - a *s*i/pop_init
+    vectplus1[1] = i + a *s*i/pop_init + b*r*i/pop_init - c*i
+    vectplus1[2] = r - b*r*i/pop_init + c*i
+    output.loc[j] = np.concatenate((np.array([j]),vectplus1.T))
+    vect = vectplus1.copy()
+    j+=1
 
 plt.plot(output['day'],output['s'])
 plt.plot(output['day'],output['i'])
 plt.plot(output['day'],output['r'])
 plt.legend(['s','i','r'])
+plt.show()
+```
+
+#Adapting SIR to Drugs
+One quick note is to see that when there are no addicted people, then no new people will become addicted. This behaviour isn't right, and we need to add in some form of spontaneous addiction and remission, representative of people using the drug on their own accord.
+
+## Functions
+$$ \frac{ds}{dt} = -a s i - d s$$
+$$ \frac{di}{dt} = a s i + b r i - c  i  + d s + e r$$
+$$ \frac{dr}{dt} =  -b r i + c i - e r$$
+It can be seen then:
+$$ \frac{ds}{dt} + \frac{di}{dt} + \frac{dr}{dt} = 0 $$
+
+## Parameters:
+a - rate people move from susceptible to infected, based on interactions between susceptible and infected
+
+b - rate people move from recovered to infected as portion of total people, based on interactions with infected people
+
+c - rate people move from infected to recovered as portion of total people
+
+d - portion of suseptible people who become addicted based on spontanious use
+
+e -  portion of recovered people who become addicted based on spontanious use
+
+%matplotlib inline
+```{python}
+import numpy as np
+import pandas
+import matplotlib.pyplot as plt
+pop_init = 1000
+pop_add = 200
+a = 0.01
+b = 0.01
+c = 0.5
+d = 0.1
+e = 0.1
+
+steps = 10
+
+vect_initial = np.array([pop_init - pop_add,pop_add,0]).T # vector of day index, suseptable, infected and recovered people
+
+output = pandas.DataFrame(columns = ['day', 's', 'i', 'r'])
+j = 0
+vect = vect_initial.copy()
+
+while j < steps:
+    vectplus1 = np.zeros([3])
+    s = vect[0]
+    i = vect[1]
+    r = vect[2]
+    vectplus1[0] = s - a *s*i/pop_init - d*s
+    vectplus1[1] = i + a *s*i/pop_init + b*r*i/pop_init - c*i + d*s + e*r
+    vectplus1[2] = r - b*r*i/pop_init + c*i -e*r
+    output.loc[j] = np.concatenate((np.array([j]),vectplus1.T))
+    vect = vectplus1.copy()
+    j+=1
+
+plt.plot(output['day'],output['s'])
+plt.plot(output['day'],output['i'])
+plt.plot(output['day'],output['r'])
+plt.legend(['s','i','r'])
+plt.show()
+```
+
+
+
+Looking at the above model, we can see that it doesn't reflect drug use in communities. One obvious one is that many people become addicted and move into the recovering population throughout the course of the simulation. This is because, unlike disease, people can use the drug without being addicted. This means we can add a new group w to symbolise people trying the drug. People in this group will then move back to the susceptible group or become addicted. People who are recovering from addiction will not go back into this trying stage and will simply become addicted if they relaspe. This is inline with the 'lifelong' model of addiction, where relaspe is triggered as soon as the person begins taking the drug again.
+
+## Functions
+$$ \frac{ds}{dt} = -a s (i + w)  - d s + f w$$
+$$ \frac{dw}{dt} =  a s (i + w) + d s - f w - g w$$
+$$ \frac{di}{dt} = g w + b r (i + w) - c  i + er$$
+$$ \frac{dr}{dt} = -b r (i + w) + c i - e r$$
+It can be seen then:
+$$ \frac{ds}{dt} + \frac{dw}{dt}+ \frac{di}{dt} + \frac{dr}{dt} = 0 $$
+
+## Parameters:
+a - rate people move from susceptible to infected, based on interactions between susceptible and infected/trying
+
+b - rate people move from recovered to infected as portion of total people, based on interactions with infected/trying
+
+c - rate people move from infected to recovered as portion of total people
+
+d - portion of suseptible people who become addicted based on spontaneous use
+
+e -  portion of recovered people who become addicted based on spontaneous use
+
+f - spontaneous movement from seseptible to trying
+
+g - movement from trying to addicted
+
+
+```{python}
+import numpy as np
+import pandas
+import matplotlib.pyplot as plt
+pop_init = 100
+a = 0.001
+b = 0.01
+c = 0.5
+d = 0.1
+e = 0.1
+f = 0.1
+g = 0.01
+
+steps = 1000
+
+vect_initial = np.array([pop_init,0,0,0]).T # vector of day index, suseptable, infected and recovered people
+
+output = pandas.DataFrame(columns = ['day', 's', 'w',  'i', 'r'])
+j = 0
+vect = vect_initial.copy()
+
+while j < steps:
+    vectplus1 = np.zeros([4])
+    s = vect[0]
+    w = vect[1]
+    i = vect[2]
+    r = vect[3]
+    vectplus1[0] = s - a*s*(i+w) - d * s + f*w
+    vectplus1[1] = w + a*s*(i+w) + d * s - f*w - g*w
+    vectplus1[2] = i + g*w + b*r*(i+w) - c*i + e*r
+    vectplus1[3] = r - b*r*(i+w) + c*i - e*r
+    output.loc[j] = np.concatenate((np.array([j]),vectplus1.T))
+    vect = vectplus1.copy()
+    j+=1
+
+plt.plot(output['day'],output['s'])
+plt.plot(output['day'],output['w'])
+plt.plot(output['day'],output['i'])
+plt.plot(output['day'],output['r'])
+plt.legend(['s','w','i','r'])
 plt.show()
 ```
