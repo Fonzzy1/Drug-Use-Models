@@ -2,11 +2,11 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
-C = pd.DataFrame(columns=['s', 't', 'a', 'r'])
-T = pd.DataFrame(columns=['s', 't', 'a', 'r'])
-Y = pd.DataFrame(columns=['s', 't', 'a', 'r'])
-A = pd.DataFrame(columns=['s', 't', 'a', 'r'])
-S = pd.DataFrame(columns=['s', 't', 'a', 'r'])
+C = pd.DataFrame(columns=['s', 't', 'a', 'r'], dtype='float128')
+T = pd.DataFrame(columns=['s', 't', 'a', 'r'], dtype='float128')
+Y = pd.DataFrame(columns=['s', 't', 'a', 'r'], dtype='float128')
+A = pd.DataFrame(columns=['s', 't', 'a', 'r'], dtype='float128')
+S = pd.DataFrame(columns=['s', 't', 'a', 'r'], dtype='float128')
 """
 Society Factors
 
@@ -14,8 +14,9 @@ Aging rate is the portion of people who advance in age each step
 Birthrate is determined by sum number of adults of birthing age
 deathrate the proportion of that group that dies each iteration
 """
-aging_rate = 0.1
-birth_rate = 0.09
+
+aging_rate = 0.05
+birth_rate = 0.07
 death_rate = 0.1*np.array([[0.2, 0.2, 0.2, 0.2],
                        [0.05, 0.05, 0.05, 0.05],
                        [0.1, 0.1, 0.1, 0.1],
@@ -35,14 +36,14 @@ X0 is the matrix that contains the initial data:
 X0 = 100 * np.array([[5, 0, 0, 0],
                      [10, 10, 0, 0],
                      [10, 5, 5, 0],
-                     [10, 0, 100, 0],
+                     [10, 20, 0, 0],
                      [10, 0, 0, 0]])
 
 (n_age_groups, n_status) = np.shape(X0)
 
 """
 Interaction Matrix - How much each age group interacts/influences with other age groups
-Doesnt necessarily need to be symentrical eg, adults influence kids more than kids influence adults
+Doesnt necessarily need to be symmetrical eg, adults influence kids more than kids influence adults
 I[i,j] = effect on age group i from group j
 
 
@@ -64,11 +65,11 @@ I =  0.001*np.array([[0.1, 0.0, 0.2, 0.5, 0.2],
                        [0.0, 0.0, 0.1, 0.8, 0.1],
                        [0.0, 0.0, 0.0, 0.5, 0.5]])
 
-P = 0.1*np.array([[0.0, 1.0, 0.9, 0.0, 1.0],
-              [0.5, 0.5, 0.9, 0.8, 0.2],
-              [0.5, 0.5, 0.9, 0.6, 0.2],
-              [0.1, 0.1, 0.9, 0.6, 0.1],
-              [0.0, 0.0, 0.9, 0.9, 0.1]])
+P = 0.1*np.array([[0.0, 1.0, 0.5, 0.0, 1.0],
+                  [0.5, 0.5, 0.5, 0.8, 0.2],
+                  [0.5, 0.5, 0.5, 0.6, 0.2],
+                  [0.1, 0.1, 0.5, 0.6, 0.1],
+                  [0.0, 0.0, 0.5, 0.9, 0.1]])
 
 
 
@@ -79,7 +80,7 @@ This done in two distinct parts, first implementing the change between groups si
 """
 
 itterations  = 0
-while itterations < 100:
+while itterations < 650:
     C.loc[itterations] = X0[0]
     T.loc[itterations] = X0[1]
     Y.loc[itterations] = X0[2]
@@ -150,5 +151,20 @@ plt.plot(A.index.values,S['s'])
 plt.plot(A.index.values,S['t'])
 plt.plot(A.index.values,S['a'])
 plt.plot(A.index.values,S['r'])
+
+plt.legend(['CS', 'CT', 'CA', 'CR',
+            'TS', 'TT', 'TA', 'TR',
+            'YS', 'YT', 'YA', 'YR',
+            'AS', 'AT', 'AA', 'AR',
+            'SS', 'ST', 'SA', 'SR']   )
+plt.show()
+
+
+pop = C['s']+T['s']+Y['s']+A['s']+S['s'] + C['t']+T['t']+Y['t']+A['t']+S['t'] + C['a']+T['a']+Y['a']+A['a']+S['a'] + C['r']+T['r']+Y['r']+A['r']+S['r']
+plt.plot(A.index.values,(C['s']+T['s']+Y['s']+A['s']+S['s'])/pop)
+plt.plot(A.index.values,(C['t']+T['t']+Y['t']+A['t']+S['t'])/pop)
+plt.plot(A.index.values,(C['a']+T['a']+Y['a']+A['a']+S['a'])/pop)
+plt.plot(A.index.values,(C['r']+T['r']+Y['r']+A['r']+S['r'])/pop)
+plt.legend(['S','U','A','R'])
 plt.show()
 
