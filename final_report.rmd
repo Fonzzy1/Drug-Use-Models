@@ -318,7 +318,20 @@ SUAR_5(0.001,0.001,0.01, 0.001, 0.001,0.001,[0.0001,0.0005,0.001,0.0001],60,20,1
 SUAR_5(0.001,0.001,0.001, 0.01, 0.001,0.001,[0.0001,0.0005,0.001,0.0001],60,20,10,10,300)
 SUAR_5(0.001,0.001,0.001, 0.001, 0.01,0.001,[0.0001,0.0005,0.001,0.0001],60,20,10,10,300)
 SUAR_5(0.001,0.001,0.001, 0.001, 0.001,0.001,[0.0001,0.0005,0.001,0.0001],60,20,10,10,300)
+
 ```
+Looking at this model, it is clear to see that we will only find stationary points when births and deaths are equal. However we also want to see long term trends in growing and shrinking populations. To do this, we look at this model through populaton portions, redefinig the system as:
+
+$$ N = S + U + A + R $$
+$$ N' = s(S+U+A+R)  -d_SS -d_UU - d_AA - d_RR $$
+
+
+$$ \frac{d\frac{S}{N}}{dt} = \frac{(-S\pi_{1}N +U\pi_2P  -d_SS + b(S+U+A+R))N-N'S}{N^2} $$ 
+$$ \frac{d\frac{U}{N}}{dt} = \frac{(S\pi_1N -U\pi_2P - U\pi_3 - d_UU )N-N'U}{N^2} $$
+$$ \frac{d\frac{A}{N}}{dt} = \frac{(U\pi_3 - A\pi_4P + R\pi_5N - d_AA)N-N'A}{N^2}  $$
+$$ \frac{d\frac{R}{N}}{dt} = \frac{(A\pi_4P - R\pi_5N - d_RR )N-N'R}{N^2} $$
+
+
 \newpage
 
 # Results
