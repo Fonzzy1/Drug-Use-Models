@@ -1,5 +1,5 @@
 ---
-title : 'Modeling Drug Use in Comunities'
+title : 'Modelling Drug Use in Communities'
 author:  'Alfie Chadwick, Kevin Dai, Chrysovalantis Thomopoulos'
 ---
 
@@ -414,3 +414,11 @@ $$ \pi_4*A*R = \pi_5*A$$
 $$R:A = \pi_5:\pi_4$$
 
 Therefore any point [0,0, $\frac {P_{total}*\pi_4}{\pi_4 + \pi_5}$ ,$\frac {P_{total}*\pi_5}{\pi_4 + \pi_5}$]
+
+\newpage
+# References
+
+ 1) Mushanyu, J, Nyabadza, F, Muchatibaya, G, & Stewart, A G. R. (2016). Modelling Drug Abuse Epidemics in the Presence of Limited Rehabilitation Capacity. Bulletin of Mathematical Biology, 78(12), 2364–2389. https://doi.org/10.1007/s11538-016-0218-5
+ 2) 
+
+
