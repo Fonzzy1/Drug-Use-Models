@@ -349,8 +349,15 @@ $$ \frac{d\frac{R}{N}}{dt} = \frac{(A\pi_4P - R\pi_5N - d_RR )N-N'R}{N^2} $$
 // Limitations
 // Future Tweaks
 
-Firstly, one of the main differences between the aforementioned model and ours is the overall use of compartment models/blocks. A similar alteration of the basic SIR model has taken place.In this instance SL(t) represent the population at low risk of being initiated into drug abuse and the class SH(t) represents the population at high risk being initiated into drug abuse. Also Rop(t) stands for rehabilitation as outpatients and Rip(t) stands for the rehabilitation as inpatients.
-This form of compartment model may be deemed to be more accurate since in our case we have settled for a simple compartment for the susceptible and recovered population but have made the addicted compartment more intricate. The Hill Function and center manifold theory have been used as well and in our case could have enrichen our own research.
+In this part of the discussion, we aim to compare our model with the one presented by
+Mushanyu, J, Nyabadza, F, Muchatibaya, G, & Stewart, A G. R. (2016) and decide what future tweaks and changes can be made to further improve our own model.
+The use of protein and ligand bonding as well as the Hill function is quite interesting
+since the authors have effectively linked Biological Modelling and altered it to their own advantage. 
+Firstly, protein and a ligand bonding forming a new product has equivalently been transformed into addicts connecting and creating a bond with a recovery center and as a result being transformed themselves. They have also used the term ‘Cooperativity’ as a parameter which is how other rehabilitants affect other users either negatively or positively. 
+In our case we have used positive and negative influence of age groups and/or compartment models on each other based on interactions instead of cooperativity. Cooperativity is a way more specific and detailed parameter whilst our own is more general. Applying both the protein-ligand equivalent and the subdivision of a Recovered Cooperation parameter could help our model in the future.
+Secondly, the Hill Function was adjusted to suit their drug model. They split Rehabilitation in two sections. Outpatient rehabilitation allows the user to stay productive and around their family while inpatient rehabilitation involves rehabilitation centers and more strict rules. Of course, limited resources and capacities affect users’ choices. The rehabilitation capacities are limited in their own way as well since in a lot of countries the health care department is not adequate to help all users which makes the model realistic and pragmatic.
+We on the other hand have sub compartments in the Infected Area which we have split into Using and Addicted compartments while we have not done the same in the Susceptible and Recovered compartments. Integrating those in the future as well as saturation effects can make our model more effective.
+
 
 
 \newpage
