@@ -44,5 +44,5 @@ sympref('FloatingPointOutput',true)
 
 subs(res)
 
-
+1 + r+s_
 

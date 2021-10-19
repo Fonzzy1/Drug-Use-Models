@@ -1,6 +1,7 @@
 ---
 title : 'Modelling Drug Use in Communities'
 author:  'Alfie Chadwick, Kevin Dai, Chrysovalantis Thomopoulos'
+output: pdf_document
 ---
 
 # Introduction
@@ -267,7 +268,7 @@ P = 0.1*np.array([[0.0, 1.0, 0.5, 0.0, 1.0],
                   [0.1, 0.1, 0.5, 0.6, 0.1],
                   [0.0, 0.0, 0.5, 0.9, 0.1]])
 
-SUAR_20(aging_rate,birth_rate,death_rate, I, P, X0,650)
+SUAR_20(aging_rate,birth_rate,death_rate, I, P, X0,600)
 
 ```
 
@@ -324,21 +325,30 @@ SUAR_5(0.001,0.001,0.001, 0.001, 0.001,0.001,[0.0001,0.0005,0.001,0.0001],60,20,
 ```
 Looking at this model, it is clear to see that we will only find stationary points when births and deaths are equal. However we also want to see long term trends in growing and shrinking populations. To do this, we look at this model through populaton portions, redefinig the system as:
 
-$$ N = S + U + A + R $$
-$$ N' = s(S+U+A+R)  -d_SS -d_UU - d_AA - d_RR $$
+$$ T = S + U + A + R $$
+$$ T' = b(S+U+A+R)  -d_SS -d_UU - d_AA - d_RR $$
 
 
-$$ \frac{d\frac{S}{N}}{dt} = \frac{(-S\pi_{1}N +U\pi_2P  -d_SS + b(S+U+A+R))N-N'S}{N^2} $$ 
-$$ \frac{d\frac{U}{N}}{dt} = \frac{(S\pi_1N -U\pi_2P - U\pi_3 - d_UU )N-N'U}{N^2} $$
-$$ \frac{d\frac{A}{N}}{dt} = \frac{(U\pi_3 - A\pi_4P + R\pi_5N - d_AA)N-N'A}{N^2}  $$
-$$ \frac{d\frac{R}{N}}{dt} = \frac{(A\pi_4P - R\pi_5N - d_RR )N-N'R}{N^2} $$
+$$ \frac{d\frac{S}{N}}{dt} = \frac{(-S\pi_{1}N +U\pi_2P  -d_SS + b(S+U+A+R))T-T'S}{T^2} $$ 
+$$ \frac{d\frac{U}{N}}{dt} = \frac{(S\pi_1N -U\pi_2P - U\pi_3 - d_UU )T-T'U}{T^2} $$
+$$ \frac{d\frac{A}{N}}{dt} = \frac{(U\pi_3 - A\pi_4P + R\pi_5N - d_AA)T-T'A}{T^2}  $$
+$$ \frac{d\frac{R}{N}}{dt} = \frac{(A\pi_4P - R\pi_5N - d_RR )T-T'R}{T^2} $$
 
+Denoting these fractions as s,u,a,r and reformatting the equation using T as a characteristic for population and $\frac{1}{b}$ as a characteristic for time;
 
+$$ s+u+a+r = 1$$
+$$ \frac{ds}{dt} = (-s\pi_{1}(u+a)+u\pi_2(s+r)  -d_Ss + 1)-s(1 - d_Ss - d_Uu - d_Aa - d_Rr) $$ 
+$$ \frac{du}{dt} = (s\pi_{1}(u+a)-u\pi_2(s+r) - u\pi_3 -d_Uu )-u(1 - d_Ss - d_Uu - d_Aa - d_Rr) $$
+$$ \frac{da}{dt} = (u\pi_3 -a\pi_4(s+r) + r\pi_5(u+a) -d_Aa )-a(1 - d_Ss - d_Uu - d_Aa - d_Rr)  $$
+$$ \frac{dr}{dt} = (a\pi_4(s+r) - r\pi_5(u+a) -d_Rr )-r(1 - d_Ss - d_Uu - d_Aa - d_Rr)$$
 \newpage
 
 # Results
 
-// Stationay distributions of final model -> jacobian plot
+Looking at the above equations, it may not be obvious as to what the stationary points are. However, since we are now looking at population portion, we can think of deaths as a movement from all compartments to the susceptible compartments. This makes it clear the only  stationary point is when all the people are in the susceptible compartment, meaning the drug is 'extinct'.  Similar, the drug is also extinct when everyone is either in the recovered or susceptible group, as one just has to wait for the recovered people to die for the portion of S to reach 1. These two facts can be seen in apendix 3.
+
+Another point of interest is the conditional stationary points, that occur when the parameters are at specific values. 
+One such case is when the $\pi$ paramaters are much greater than the death rate, indicating transition between the groups occur rapidly in comparison to a lifespan. In this case pseudo-stationay points simaler to thoes descirbed in apendix 2 are found. 
 
 \newpage
 
@@ -396,6 +406,7 @@ Therefore:
 
 $$ \pi_2 * R * I - \pi_3 *  I = - \pi_2 * R * I + \pi_3 *  I  $$
 $$ \pi_2 * R * I = \pi_3 * I $$
+:q
 $$ R:I = \pi_3:\pi_2 $$
 
 Therefore any point [0, $\frac {P_{total}*\pi_2}{\pi_2 + \pi_3}$ ,$\frac {P_{total}*\pi_3}{\pi_2 + \pi_3}$]
@@ -422,31 +433,24 @@ $$R:A = \pi_5:\pi_4$$
 
 Therefore any point [0,0, $\frac {P_{total}*\pi_4}{\pi_4 + \pi_5}$ ,$\frac {P_{total}*\pi_5}{\pi_4 + \pi_5}$]
 
-## Appendix 3 : Stationary points of Simplified SUAR Model with age
+## Apendix 3: Critical Points of Simplified SUAR model
 
-We realize that our 4 equations can take the form 
-
-$$ -S*\pi_1*N+U*\pi_2*P-d_S*S+b*(S+U+A+R)-\frac{N'}{N}*S =0 $$
-$$ S*\pi_1*N-U*\pi_2*P-U*\pi_3-d_U*U-\frac{N'}{N}*U=0 $$
-$$ U*\pi_3-A*\pi_4*P+R*\pi_5*N-d_A*A-\frac{N'}{N}*A=0 $$
-$$ A*\pi_4*P-R\pi_5*N-d_R*R - \frac{N'}{N}*R =0$$
-
-Now adding the first two and the last two we get 
-
-$$ -U*\pi_3-d_S*S-d_U*U+b*(S+U+A+R)-\frac{N'}{N}(*U+S)=0 $$
-$$U*\pi_3-d_A*A-d_R*R-\frac{N'}{N}*(A+R)=0 $$
-
-Adding these two again we get
-
-$$ N'-d_S*S-d_U*U-d_A*A-d_R*R+b*(S+U+A+R)=0$$
-
-And simplifying we have
-
-$$ b=s $$
-
-So any point with b=s is a stationary point
+When s = 1:
+$$ s = 1$$
+$$ \frac{ds}{dt} = (-d_Ss + 1)-s(1 - d_Ss) = (1-S)(1-d_Ss)  = 0 $$ 
+$$ \frac{du}{dt} = 0 $$
+$$ \frac{da}{dt} = 0  $$
+$$ \frac{dr}{dt} = 0  $$
 
 
+When s+r = 1:
+$$ s+r = 1$$
+$$ s = 1 - r $$
+
+$$ \frac{ds}{dt} = (-d_Ss + b)-s(1 - d_Ss - d_Rr)  = (1 -s)*(1 + d_r*s - d_s*s)$$ 
+$$ \frac{du}{dt} = 0 $$
+$$ \frac{da}{dt} = 0  $$
+$$ \frac{dr}{dt} = (-d_Rr )-r(1 - d_Ss - d_Rr) = (s - 1)*(1 + d_r*s - d_s*s)$$
 
 \newpage
 # References
