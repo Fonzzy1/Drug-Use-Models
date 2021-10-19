@@ -415,6 +415,32 @@ $$R:A = \pi_5:\pi_4$$
 
 Therefore any point [0,0, $\frac {P_{total}*\pi_4}{\pi_4 + \pi_5}$ ,$\frac {P_{total}*\pi_5}{\pi_4 + \pi_5}$]
 
+## Appendix 3 : Stationary points of Simplified SUAR Model with age
+
+We realize that our 4 equations can take the form 
+
+$$ -S*\pi_1*N+U*\pi_2*P-d_S*S+b*(S+U+A+R)-\frac{N'}{N}*S =0 $$
+$$ S*\pi_1*N-U*\pi_2*P-U*\pi_3-d_U*U-\frac{N'}{N}*U=0 $$
+$$ U*\pi_3-A*\pi_4*P+R*\pi_5*N-d_A*A-\frac{N'}{N}*A=0 $$
+$$ A*\pi_4*P-R\pi_5*N-d_R*R - \frac{N'}{N}*R =0$$
+
+Now adding the first two and the last two we get 
+
+$$ -U*\pi_3-d_S*S-d_U*U+b*(S+U+A+R)-\frac{N'}{N}(*U+S)=0 $$
+$$U*\pi_3-d_A*A-d_R*R-\frac{N'}{N}*(A+R)=0 $$
+
+Adding these two again we get
+
+$$ N'-d_S*S-d_U*U-d_A*A-d_R*R+b*(S+U+A+R)=0$$
+
+And simplifying we have
+
+$$ b=s $$
+
+So any point with b=s is a stationary point
+
+
+
 \newpage
 # References
 
