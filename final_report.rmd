@@ -2,6 +2,7 @@
 title : 'Modelling Drug Use in Communities'
 author:  'Alfie Chadwick, Kevin Dai, Chrysovalantis Thomopoulos'
 output: pdf_document
+
 ---
 
 # Introduction
@@ -12,7 +13,7 @@ The wide variety of past articles and research papers on the topic indicate the 
 Also, another interesting article is 
 
 
-\newpage
+
 
 # Method
 
@@ -319,8 +320,7 @@ SUAR_5(0.01,0.001,0.001, 0.001, 0.001,0.001,[0.0001,0.0005,0.001,0.0001] ,60,20,
 SUAR_5(0.001,0.01,0.001, 0.001, 0.001,0.001,[0.0001,0.0005,0.001,0.0001],60,20,10,10,300)
 SUAR_5(0.001,0.001,0.01, 0.001, 0.001,0.001,[0.0001,0.0005,0.001,0.0001],60,20,10,10,300)
 SUAR_5(0.001,0.001,0.001, 0.01, 0.001,0.001,[0.0001,0.0005,0.001,0.0001],60,20,10,10,300)
-SUAR_5(0.001,0.001,0.001, 0.001, 0.01,0.001,[0.0001,0.0005,0.001,0.0001],60,20,10,10,300)
-SUAR_5(0.001,0.001,0.001, 0.001, 0.001,0.001,[0.0001,0.0005,0.001,0.0001],60,20,10,10,300)
+
 
 ```
 Looking at this model, it is clear to see that we will only find stationary points when births and deaths are equal. However we also want to see long term trends in growing and shrinking populations. To do this, we look at this model through populaton portions, redefinig the system as:
@@ -341,16 +341,138 @@ $$ \frac{ds}{dt} = (-s\pi_{1}(u+a)+u\pi_2(s+r)  -d_Ss + 1)-s(1 - d_Ss - d_Uu - d
 $$ \frac{du}{dt} = (s\pi_{1}(u+a)-u\pi_2(s+r) - u\pi_3 -d_Uu )-u(1 - d_Ss - d_Uu - d_Aa - d_Rr) $$
 $$ \frac{da}{dt} = (u\pi_3 -a\pi_4(s+r) + r\pi_5(u+a) -d_Aa )-a(1 - d_Ss - d_Uu - d_Aa - d_Rr)  $$
 $$ \frac{dr}{dt} = (a\pi_4(s+r) - r\pi_5(u+a) -d_Rr )-r(1 - d_Ss - d_Uu - d_Aa - d_Rr)$$
-\newpage
+
+
+
+```{python, echo = FALSE, fig5, fig.show="hold", out.width="50%" }
+def SUAR_norm(p1,p2,p3, p4, p5,d,S0,U0,A0,R0,i,h):
+
+    vect_initial = np.array([S0,U0,A0,R0]).T # vector of day index, suseptable, infected and recovered people
+    
+    output = pd.DataFrame(columns = ['day', 's', 'u','a', 'r'])
+    j = 0
+    vect = vect_initial.copy()
+    
+    ds = d[0]
+    du = d[1]
+    da = d[2]
+    dr = d[3]
+    
+    while j < i:
+        vectplus1 = np.zeros([4])
+        s = vect[0]
+        u = vect[1]
+        a = vect[2]
+        r = vect[3]
+        vectplus1[0] = s +h*((-s*p1*(u+a)+u*p2*(s+r)  -ds*s + 1)-s *(1 - ds*s - du*u - da*a - dr*r)) 
+        vectplus1[1] = u +h*((s*p1*(u+a)-u*p2*(s+r) - u*p3 -du*u )-u*(1 - ds*s - du*u - da*a - dr*r))
+        vectplus1[2] = a +h*((u*p3 -a*p4*(s+r) + r*p5*(u+a) -da*a )-a*(1 - ds*s - du*u - da*a - dr*r))
+        vectplus1[3] = r +h*((a*p4*(s+r) - r*p5*(u+a) -dr*r )-r*(1 - ds*s -du*u - da*a - dr*r))
+        output.loc[j] = np.concatenate((np.array([j*h]),vectplus1.T))
+        vect = vectplus1.copy()
+        j+=1
+    plt.plot(output['day'],output['s'])
+    plt.plot(output['day'],output['u'])
+    plt.plot(output['day'],output['a'])
+    plt.plot(output['day'],output['r'])
+    plt.title('Portion: p1=' + str(p1) + ', p2=' + str(p2) + ', p3=' +str(p3) + ', p4=' +str(p4) + ', p5=' +str(p5))
+    plt.legend(['S','U','A','R'])
+    plt.show()
+    
+
+SUAR_norm(10,1,1,1,1,[0.1,0.5,1,0.1],0.6,0.2,0.1,0.1,50,0.1)
+SUAR_norm(1,10,1,1,1,[0.1,0.5,1,0.1],0.6,0.2,0.1,0.1,50,0.1)
+SUAR_norm(1,1,10,1,1,[0.1,0.5,1,0.1],0.6,0.2,0.1,0.1,50,0.1)
+SUAR_norm(1,1,1,10,1,[0.1,0.5,1,0.1],0.6,0.2,0.1,0.1,50,0.1)
+
+
+```
 
 # Results
 
-Looking at the above equations, it may not be obvious as to what the stationary points are. However, since we are now looking at population portion, we can think of deaths as a movement from all compartments to the susceptible compartments. This makes it clear the only  stationary point is when all the people are in the susceptible compartment, meaning the drug is 'extinct'.  Similar, the drug is also extinct when everyone is either in the recovered or susceptible group, as one just has to wait for the recovered people to die for the portion of S to reach 1. These two facts can be seen in apendix 3.
+Looking at the above equations, it may not be obvious as to what the stationary points are. However, since we are now looking at population portion, we can think of deaths as a movement from all compartments to the susceptible compartments. This makes it clear the only  stationary point is when all the people are in the susceptible compartment, meaning the drug is 'extinct'.  Similar, the drug is also extinct when everyone is either in the recovered or susceptible group, as one just has to wait for the recovered people to die for the portion of S to reach 1. These two facts can be seen in appendix 3. This result was confirmed using matlab in appendix 4.
 
 Another point of interest is the conditional stationary points, that occur when the parameters are at specific values. 
-One such case is when the $\pi$ paramaters are much greater than the death rate, indicating transition between the groups occur rapidly in comparison to a lifespan. In this case pseudo-stationay points simaler to thoes descirbed in apendix 2 are found. 
+One such case is when the $\pi$ parameters are much greater than the death rate, indicating transition between the groups occur rapidly in comparison to a lifespan. In this case pseudo-stationary points  exist similar to those described in appendix 2.
 
-\newpage
+While simulating various combinations of parameters, we found points that caused underflow errors when calculating the rate of change, since it was so low. Although not a true stationary point, as confirmed by the code in appendix 4, these points represents areas where the model will change extremely slowly, creating another pseudo-stationary point. Looking at some initial population and death parameters, we can plot the number of simulations that end in extinction as a function of their $\pi$ parameters as shown below.
+
+```{python, fig6, echo = FALSE}
+def SUAR_norm(p1,p2,p3, p4, p5,d,S0,U0,A0,R0,i,h):
+
+    vect_initial = np.array([S0,U0,A0,R0]).T
+
+    j = 0
+    vect = vect_initial.copy()
+
+    ds = d[0]
+    du = d[1]
+    da = d[2]
+    dr = d[3]
+
+    while j < i:
+        vectplus1 = np.zeros([4])
+        s = vect[0]
+        u = vect[1]
+        a = vect[2]
+        r = vect[3]
+        vectplus1[0] = s +h*((-s*p1*(u+a)+u*p2*(s+r)  -ds*s + 1)-s *(1 - ds*s - du*u - da*a - dr*r))
+        vectplus1[1] = u +h*((s*p1*(u+a)-u*p2*(s+r) - u*p3 -du*u )-u*(1 - ds*s - du*u - da*a - dr*r))
+        vectplus1[2] = a +h*((u*p3 -a*p4*(s+r) + r*p5*(u+a) -da*a )-a*(1 - ds*s - du*u - da*a - dr*r))
+        vectplus1[3] = r +h*((a*p4*(s+r) - r*p5*(u+a) -dr*r )-r*(1 - ds*s -du*u - da*a - dr*r))
+        vect = vectplus1.copy()
+        j+=1
+
+    if s + r > 0.98:
+        return True
+    else:
+        return False
+
+res = pd.DataFrame(columns=['p1','p2','p3','p4','p5', 'extinct'])
+for p1 in range(-3,4):
+    for p2  in range(-3,4):
+        for p3 in range(-3,4):
+            for p4 in range(-3,4):
+                for p5 in range(-3,4):
+
+                    bool = SUAR_norm(2**p1, 2**p2, 2**p3, 2**p4, 2**p5, [1, 1, 1, 1], 0.6, 0.2, 0.1, 0.1, 100, 0.1)
+                    res.loc[len(res)] = [float(p1),float(p2),float(p3),float(p4), float(p5), bool]
+
+p = ['p1','p2','p3','p4','p5']
+
+xlabels = ['-3','-2','-1','0','1','2','3']
+
+
+fig, axs = plt.subplots(5, 5)
+for i , a in enumerate( p):
+    for j , b in enumerate(p):
+        if i !=j:
+            w = res[[a,b,'extinct']].groupby([a,b]).sum().unstack()
+            t = axs[i,j].pcolormesh(w, vmin = 0, vmax = 216)
+        if i == 4:
+            axs[i,j].set_xticks(np.arange(7) + 0.5, minor=False)
+            axs[i,j].set_xticklabels(xlabels, fontdict=None, minor=False)
+            axs[i,j].set_xlabel('Log2(' + b +')')
+        else:
+            axs[i,j].get_xaxis().set_visible(False)
+        if j == 0 :
+            axs[i,j].set_yticks(np.arange(7) + 0.5, minor=False)
+            axs[i,j].set_yticklabels(xlabels, fontdict=None, minor=False)
+            axs[i,j].set_ylabel('Log2(' + a +')')
+        else:
+            axs[i,j].get_yaxis().set_visible(False)
+
+fig.subplots_adjust(right=0.8)
+cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
+c = fig.colorbar(t, cax=cbar_ax)
+fig.suptitle("Number of Simulations that reach extinction before t = 100 \n ds=1, du=1, da=1,dr=1 s0=0.6, u0=0.2, a0=0.1, r0=0.1, Total Sims = 216")
+plt.show()
+
+```
+
+From this plot, one can see a big factor that influences the creation of these pseudo stationary points is the magnitude of $\pi_1$, an in a lesser extent the ratio of $\pi_1$ and $\pi_2$. In this case, any births will rapidly transition to the using category, meaning that they then have the potential to become addicted. This slows the transition to a state where $r+s = 1$, creating the pseudo stationary point.
+
+
 
 # Discussion
 
@@ -370,14 +492,15 @@ We on the other hand have sub compartments in the Infected Area which we have sp
 
 
 
-\newpage
+
 
 # Conclusion
 
 // Conclusion
 
 
-\newpage
+
+
 # Appendix
 
 ## Appendix 1 : Stationary points of SIR model
@@ -452,7 +575,8 @@ $$ \frac{du}{dt} = 0 $$
 $$ \frac{da}{dt} = 0  $$
 $$ \frac{dr}{dt} = (-d_Rr )-r(1 - d_Ss - d_Rr) = (s - 1)*(1 + d_r*s - d_s*s)$$
 
-\newpage
+
+
 # References
 
  1) Mushanyu, J, Nyabadza, F, Muchatibaya, G, & Stewart, A G. R. (2016). Modelling Drug Abuse Epidemics in the Presence of Limited Rehabilitation Capacity. Bulletin of Mathematical Biology, 78(12), 2364–2389. https://doi.org/10.1007/s11538-016-0218-5
