@@ -30,6 +30,7 @@ Thirdly, the idea that addiction is caused by interactions between individuals s
 
 One divergence we made from the most basic SIR model is allowing for relapse from the recovered group back into the infected group. This represents how recovering addicts will become addicted again at a different rate to people who have never used the drug before. However, an important fact is that people can not move back into the susceptible group as addiction is said to last a lifetime.
 
+![SAR Diagram](./pics/1.png)
 Our SIR model is defined by the following equations:
 $$\frac{dS}{dt} = -\pi_1 * S * I $$
 $$\frac{dI}{dt} = \pi_1 * S * I + \pi_2 * R * I - \pi_3 *  I $$
@@ -57,6 +58,7 @@ SIR(0.0001,0.001, 0.1, 70,20,10,100)
 The SIR model fails to distingush between different severities of addiction. By grouping the individuals who are trying/testing the drug with people who are addicted we fail to capture the behaviour of people trying the drug without becoming reliant on it.
 Because of this, we adapted the SIR model, relabeled the infected group to addicted and added in a new compartment model for users of the drug who are not addicted, the 'Using' group. Susceptible people will now move into the Using group before moving into the Addicted group. Since there are now two groups who are using the drug and interacting with the community, the $I$ terms of the ODEs in the SIR model have to be replaced with $U+A$
 
+![](./pics/2.png)
 The new model can now be described by the folowing equations:
 
 $$\frac{dS}{dt} = - \pi_1*S*(A+U) + \pi_2*U   $$
@@ -134,7 +136,7 @@ SUAR_20(aging_rate,birth_rate,death_rate, I, P, X0,600)
 After building the SUAR model with different age groups, we toyed arroung with various combinations of paramenters to see how the model reacted. 
 However, we found that with 20 compartments and 73 parameters, it is realy hard to go through all the combinations to find meaningfull results from the model. We could see that there were stationary points for the population portions, but finding them analyticaly was near impossible. Because of this, we sought to find a way to simplify the model to produce results that are easier to understand. We did this by removing the different age groups all together, while keeping the equations describing the model the same. By removing the age groups, the equations dramaticaly simplify into this form;
 
-              
+![](./pics/3.png)
 $$\frac{dS}{dt} = -S\pi_{1}N +U\pi_2P  -d_SS + b(S+U+A+R)  $$
 $$\frac{dU}{dt} = S\pi_1N -U\pi_2P - U\pi_3 - d_UU  $$
 $$\frac{dA}{dt} = U\pi_3 - A\pi_4P + R\pi_5N - d_AA$$
