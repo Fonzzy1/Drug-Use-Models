@@ -196,7 +196,7 @@ We can think of deaths as a movement from all compartments to the susceptible co
 However, for some combinations of parameters, secondary stationary points are found. These non-trivial stationary points could not be found analyticaly using matlab, therefore their existance must be verified in a case by case basis, using the code in apendix 4. 
 Note that all the death parameters were set to one, meaning that these results are for drugs where the rate of death is independent of compartment. To find results for other sets of death parameters, line 25 of appendix 4 should be altered.
 
-Using the table of non trivial stationary points  (appendix 10), we can now plot the number of combinations of parameters that lead to non-trival stationary points pairwise by parameter.
+Using the table of non trivial stationary points  (appendix 10), we can now plot the number of combinations of parameters that lead to non-trivial stationary points pairwise by parameter.
 
 
 ```{python, simforallparams, echo = FALSE}
