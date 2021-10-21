@@ -5,7 +5,9 @@ output: pdf_document
 ---
 
 # Introduction
+Drugs are chemical substances with physiological effects. Some drugs like opiod, cannibis, alcohol, nicotine, cocaine, methamphetamine, or heroine are of concerns to policymakers due to TK. Widespread drug abuse in a community can be a burden to the society and economy for example healthcare costs due to bodily harm, enhancing of infectious diseases through second-hand needle injections, indirect funding of organised crime, mental health and rehabilitation. Further harms of drug abuse to upon the abuser may be personal ones such as financial instability, death and familial grief.
 
+Having an understanding of the dynamics of drug use will inform decision makers strategies to minimise drug use.
 For years, policymakers have been wondering why and how do drugs travel through the community and what they can do to minimise the harm users potentially  cause to themselves and the people surrounding them. In this paper, we aim to understand how drug use and addiction develops in a community and what factors can be tweaked to alter the  long term distributions of drug use, abuse and addiction in the community.
 
 "Number one is the opioid epidemic. It is a scourge across our country. A person dies every 12-and-a-half minutes from an opioid overdose and that’s far too many. Especially when we know that many of those deaths can be prevented." (4)
@@ -16,7 +18,10 @@ One article in particular by Mushanyu, J, Nyabadza, F, Muchatibaya, G, & Stewart
 
 # Aim
 The aim of this project is to produce a model to capture the dynamics of drug use. The model should address how or when individuals become drug users, addicted drug users and abstainers, and have applications in addressing economic and policy decisions.
-Investigations by past researchers [REFERENCE] have used compartment models to delianate groups in a population as well.
+
+# Hypotheses
+1. Curbing adoption of drugs and continual drug use will lead to lower proportion of drug users.
+2. 
 
 # Method
 
