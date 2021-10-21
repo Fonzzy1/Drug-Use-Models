@@ -185,21 +185,19 @@ SUAR_norm(1,1,1,10,1,[0.1,0.5,1,0.1],0.6,0.2,0.1,0.1,50,0.1)
 # Results
 
 
-Looking at the above equations, it may not be obvious as to what the stationary points are. However, since we are now looking at population portion, we can think of deaths as a movement from all compartments to the susceptible compartments. This makes it clear the only  stationary point is when all the people are in the susceptible compartment, meaning the drug is 'extinct'.  Similar, the drug is also extinct when everyone is either in the recovered or susceptible group, as one just has to wait for the recovered people to die for the portion of S to reach 1. These two facts can be seen in appendix 3. This result was confirmed using matlab in appendix 4.
+We can think of deaths as a movement from all compartments to the susceptible compartments. This makes it clear that a  stationary point exists when all the people are in the susceptible compartment, meaning the drug is 'extinct'.  Similar, the drug is also extinct when everyone is either in the recovered or susceptible group, as one just has to wait for the recovered people to die for the portion of S to reach 1. These two facts can be seen in appendix 3. Let the stationary point at $s=1$ be the trivial stationary point.
 
-Another point of interest is the conditional stationary points, that occur when the parameters are at specific values. 
-One such case is when the $\pi$ parameters are much greater than the death rate, indicating transition between the groups occur rapidly in comparison to a lifespan. In this case pseudo-stationary points  exist similar to those described in appendix 2.
+However, for some combinations of parameters, secondary stationary points are found. These non-trivial stationary points could not be found analyticaly using matlab, therefore their existance must be verified in a case by case basis, using the code in apendix 4. 
+Note that the all the death parametesr were set to one, meaning that these results are for drugs where the rate of death is independant of compartment. To find results for other sets of death parametrs, alter line 25 of appendix 4.
 
+Using the table of non trivial stationary points  (appendix 10), we can now plot the number of cobninations of parameters that lead to non-trival stationary points pairwise by parameter.
 
-
-While simulating various combinations of parameters, we found points that caused underflow errors when calculating the rate of change, since it was so low. Although not a true stationary point, as confirmed by the code in appendix 4, these points represents areas where the model will change extremely slowly, creating another pseudo-stationary point. Looking at some initial population and death parameters, we can plot the number of simulations that end in extinction as a function of their $\pi$ parameters as shown below.
 
 ```{python, simforallparams, echo = FALSE}
-res = pd.DataFrame(columns=['p1','p2','p3','p4','p5', 'extinct'])
-use = pd.DataFrame(columns=['p1','p2','p3','p4','p5', 'p_using'])
 
 res = pd.read_csv('../ss.csv')
 use =  pd.read_csv('../avg.csv')
+
 res.columns = ['p1','p2','p3','p4','p5', 'extinct']
 use.columns =  [ 'p1','p2','p3','p4','p5', 'p_using']
 
@@ -230,18 +228,16 @@ for i , a in enumerate( p):
 fig.subplots_adjust(right=0.8)
 cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
 c = fig.colorbar(t, cax=cbar_ax)
-fig.suptitle("Number of Simulations that reach extinction before t = 100 \n ds=1, du=1, da=1,dr=1 s0=0.6, u0=0.2, a0=0.1, r0=0.1, Total Sims = 216")
+fig.suptitle("Number of combinations that have Non-trivial stationary points \n ds=1, du=1, da=1,dr=1 s0=0.6, u0=0.2, a0=0.1, r0=0.1, Total Sims = 216")
 plt.show()
 
 ```
 
-From this plot, one can see a big factor that influences the creation of these pseudo stationary points is the magnitude of $\pi_1$, an in a lesser extent the ratio of $\pi_1$ and $\pi_2$. In this case, any births will rapidly transition to the using category, meaning that they then have the potential to become addicted. This slows the transition to a state where $r+s = 1$, creating the pseudo stationary point.
+From this plot, one can see a big factor that influences the creation of these non-trival stationary points is the magnitude of $\pi_1$, an in a lesser extent the ratio of $\pi_1$ and $\pi_2$. In this case, any births will rapidly transition to the using category, meaning that they then have the potential to become addicted. 
 
 Another result one can take from the data is the number of people who are using or addicted to the drug at the pseudo-stationary points, as shown in these plots below.
 
 ```{python,pssp, echo = FALSE}
-
-use = use[res['extinct'] == False]
 fig, axs = plt.subplots(5, 5)
 for i , a in enumerate( p):
     for j , b in enumerate(p):
@@ -264,7 +260,7 @@ for i , a in enumerate( p):
 fig.subplots_adjust(right=0.8)
 cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
 c = fig.colorbar(t, cax=cbar_ax)
-fig.suptitle("Average portion of people using or addicted at psuedo-statioanry Points \n ds=1, du=1, da=1,dr=1 s0=0.6, u0=0.2, a0=0.1, r0=0.1, Total Sims = 216")
+fig.suptitle("Average portion of people using or addicted at non-Trivial Statioanry Points \n ds=1, du=1, da=1,dr=1 s0=0.6, u0=0.2, a0=0.1, r0=0.1, Total Sims = 216")
 plt.show()
 ```
 Looking at these plots we can see the following behaviours:
@@ -275,7 +271,7 @@ Looking at these plots we can see the following behaviours:
 * Bigger $\pi_4$ -> Lower Mean
 * Bigger $\pi_5$ -> Higher Mean
 
-Therefore, in terms of tweaking the long term state of drug use in communities, the best way to minimise drug use is to minimise $\pi_1$ such that a pseudo stationary point wont be reached and the drug will die out. If this cant be done, the number of people using or addicted to drugs can be minimised by lowering the values of $\pi_2, \pi_3, \pi_4$ or maximising the value of $\pi_5$ to make the pseudo-stationay point have a maxal number of people not using the drug.
+Therefore, in terms of tweaking the long term state of drug use in communities, the best way to minimise drug use is to minimise $\pi_1$ such that the drug will become extinct. If this cant be done, the number of people using or addicted to drugs can be minimised by lowering the values of $\pi_2, \pi_3, \pi_4$ or maximising the value of $\pi_5$ to make the pseudo-stationay point have a maxal number of people not using the drug.
 
 # Discussion
 
@@ -378,6 +374,112 @@ $$ \frac{du}{dt} = 0 $$
 $$ \frac{da}{dt} = 0  $$
 $$ \frac{dr}{dt} = (-d_Rr )-r(1 - d_Ss - d_Rr) = (s - 1)*(1 + d_r*s - d_s*s)$$
 
+
+## Appendix 4: Matlab code for generating conditional Stationary Points
+
+```{octave, eval = FALSE}
+syms s u a r p1 p2 p3 p4 p5 ds du da dr
+
+
+ode1 =  (-s*p1*(u+a)+u*p2*(s+r)  -ds*s + 1)-s *(1 - ds*s - du*u - da*a - dr*r);
+ode2 =  (s*p1*(u+a)-u*p2*(s+r) - u*p3 -du*u )-u*(1 - ds*s - du*u - da*a - dr*r) ;
+ode3 =  (u*p3 -a*p4*(s+r) + r*p5*(u+a) -da*a )-a*(1 - ds*s - du*u - da*a - dr*r);
+ode4 =  (a*p4*(s+r) - r*p5*(u+a) -dr*r )-r*(1 - ds*s -du*u - da*a - dr*r);
+sums = s+u+a+r;
+
+
+
+odes = [ode1 == 0, ode2 == 0, ode3 == 0 , ode4 == 0, sums  == 1, s>=0, u >= 0, a >=0, r>=0];
+
+
+ss = [];
+avg = [];
+
+k = 3;
+
+for p1i = -k:k
+    for p2i   = -k:k
+        for p3i  = -k:k
+            for p4i  = -k:k
+                for p5i = -k:k
+                    [p1, p2, p3, p4, p5, ds, du, da, dr] = deal(2^p1i, 2^p2i, 2^p3i, 2^p4i, 2^p5i,1,1,1,1);
+                    sol = solve(subs(odes),'Real',true);
+                    ss = [ss ; [p1i,p2i,p3i,p4i,p5i,length(sol.s) - 1]];
+                    if length(sol.s) > 1
+                        avg = [avg ; [p1i,p2i,p3i,p4i,p5i,mean(sol.u(2:length(sol.u)) + sol.a(2:length(sol.a)))]];
+                    end
+                end
+            end
+        end
+    end
+end
+
+
+
+writematrix(double(avg),'avg.csv')
+writematrix(double(ss), 'ss.csv')
+```
+
+## Appendix 5: Pyhton code for simulating SIR model
+
+```{python, echo = FALSE}
+
+from inspect import getsource as gs
+print(gs(SIR))
+ 
+```
+
+## Appendix 6: Pyhton code for simulating SUAR model
+
+```{python, echo = FALSE}
+
+from inspect import getsource as gs
+print(gs(SUAR))
+ 
+```
+## Appendix 7: Pyhton code for simulating 20 compartment SUAR model
+
+```{python, echo = FALSE}
+
+from inspect import getsource as gs
+print(gs(SUAR_20))
+ 
+```
+## Appendix 8: Pyhton code for simulating 5 compartment SUAR model
+
+```{python, echo = FALSE}
+
+from inspect import getsource as gs
+print(gs(SUAR_5))
+ 
+```
+
+## Appendix 9: Pyhton code for simulating  5 compartment dimensionless SUAR model
+
+```{python, echo = FALSE}
+
+from inspect import getsource as gs
+print(gs(SUAR_norm))
+ 
+```
+
+## Apendix 10: Number of non-trivial stationary points
+
+```{r, echo = FALSE}
+library('knitr')
+
+ss <- read.csv(file = '../ss.csv')
+colnames(ss) <- c('log2(p1)','log2(p2)','log2(p3)','log2(p4)','log2(p5)', '#Non-Trivial SS')
+kable(ss)
+```
+
+## Apendix 11: Avarage of u + a for non-trivial
+```{r, echo = FALSE}
+
+avg <- read.csv(file = '../avg.csv')
+colnames(avg) <- c('log2(p1)','log2(p2)','log2(p3)','log2(p4)','log2(p5)', 'a+u')
+kable(avg)
+```
 
 
 # References

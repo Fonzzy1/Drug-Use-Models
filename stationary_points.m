@@ -24,7 +24,7 @@ for p1i = -k:k
                 for p5i = -k:k
                     [p1, p2, p3, p4, p5, ds, du, da, dr] = deal(2^p1i, 2^p2i, 2^p3i, 2^p4i, 2^p5i,1,1,1,1);
                     sol = solve(subs(odes),'Real',true);
-                    ss = [use ; [p1i,p2i,p3i,p4i,p5i,length(sol.s) - 1]];
+                    ss = [ss ; [p1i,p2i,p3i,p4i,p5i,length(sol.s) - 1]];
                     if length(sol.s) > 1
                         avg = [avg ; [p1i,p2i,p3i,p4i,p5i,mean(sol.u(2:length(sol.u)) + sol.a(2:length(sol.a)))]];
                     end
