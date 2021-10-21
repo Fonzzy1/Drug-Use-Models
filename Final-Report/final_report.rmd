@@ -56,8 +56,8 @@ SIR(0.0001,0.001, 0.1, 70,20,10,100)
 ```
 
 ## SUAR Model
-The SIR model fails to distingush between different severities of addiction. By grouping the individuals who are trying/testing the drug t people who are addicted in the same group we are failing to capture the behaviour of people trying the drug without becoming reliant on the drug.
-Because of this, we adapted the SIR model, renaming the infected group to addicted  and adding in a new group for users of the drug who are not addicted, labeled as the 'Using' group. Susceptible people will now move into the Using group before moving into the addicted group. Since there are now two groups who are using the drug and interacting with the community, the $I$ terms in the ODEs desribing the SIR now have to be replaced with $U+A$
+The SIR model fails to distingush between different severities of addiction. By grouping the individuals who are trying/testing the drug with people who are addicted we fail to capture the behaviour of people trying the drug without becoming reliant on it.
+Because of this, we adapted the SIR model, renaming the infected group to addicted and adding in a new compartment model for users of the drug who are not addicted, labeled as the 'Using' group. Susceptible people will now move into the Using group before moving into the addicted group. Since there are now two groups who are using the drug and interacting with the community, the $I$ terms in the ODEs desribing the SIR now have to be replaced with $U+A$
 
 The new model can now be described with the folowing equations:
 
