@@ -10,11 +10,9 @@ For years, policymakers have been wondering why and how do drugs travel through 
 
 "Number one is the opioid epidemic. It is a scourge across our country. A person dies every 12-and-a-half minutes from an opioid overdose and that’s far too many. Especially when we know that many of those deaths can be prevented." (4)
 
-These were the words of Dr. Adams, the 20th surgeon general of the United States when asked about his main concerns and focus while in his post. 
+These were the words of Dr. Adams, the 20th surgeon general of the United States when asked about his main concerns and focus indicating the severity of the matter. Substance abuse is not only harmful for one's self but our community. Multiple research articles and papers in the past have adressed model drug use. We have included some examples below from which we have taken inspiration and made commparisons.
 
-Substance abuse is not only harmful for one's self but our community. Multiple research articles and papers in the past have adressed the matter and tried to model drug use. We have included some examples below from which we have taken inspiration and made commparisons.
-
-One article in particular by Mushanyu, J, Nyabadza, F, Muchatibaya, G, & Stewart, A G. R. (2016) touches on the importance of an adequate health care system since a limited rehabilitation capacity can increase the chances of a drug abuse epidemic. The methods used in this paper are discussed further along our own.
+One article in particular by Mushanyu, J, Nyabadza, F, Muchatibaya, G, & Stewart, A G. R. (2016) touches on the importance of an adequate health care system since a limited rehabilitation capacity can increase the chances of a drug abuse epidemic. The methods used in this paper are discussed later.
 
 # Aim
 The aim of this project is to produce a model to capture the dynamics of drug use. The model should address how or when individuals become drug users, addicted drug users and abstainers, and have applications in addressing economic and policy decisions.
@@ -57,16 +55,16 @@ SIR(0.0001,0.001, 0.1, 70,20,10,100)
 
 ## SUAR Model
 The SIR model fails to distingush between different severities of addiction. By grouping the individuals who are trying/testing the drug with people who are addicted we fail to capture the behaviour of people trying the drug without becoming reliant on it.
-Because of this, we adapted the SIR model, renaming the infected group to addicted and adding in a new compartment model for users of the drug who are not addicted, labeled as the 'Using' group. Susceptible people will now move into the Using group before moving into the addicted group. Since there are now two groups who are using the drug and interacting with the community, the $I$ terms in the ODEs desribing the SIR now have to be replaced with $U+A$
+Because of this, we adapted the SIR model, relabeled the infected group to addicted and added in a new compartment model for users of the drug who are not addicted, the 'Using' group. Susceptible people will now move into the Using group before moving into the Addicted group. Since there are now two groups who are using the drug and interacting with the community, the $I$ terms of the ODEs in the SIR model have to be replaced with $U+A$
 
-The new model can now be described with the folowing equations:
+The new model can now be described by the folowing equations:
 
 $$\frac{dS}{dt} = - \pi_1*S*(A+U) + \pi_2*U   $$
 $$\frac{dU}{dt} =  \pi_1*S*(A+U) - \pi_2*U  - \pi_3*U $$
 $$\frac{dA}{dt} = \pi_3*U +\pi_4 *(A+U)*R - \pi_5*A $$
 $$\frac{dR}{dt} =  \pi_5*A - \pi_4 *(A+U)*R $$
 
-With parameters  $\pi_1$, $\pi_2$,  $\pi_3$, $\pi_4$, and $\pi_5$ being the 'infectiveness' of the drug for susceptible people, the rate that people stop trying the drug, the rate that people become addicted, the 'infectiveness' for recovered people and the recovery rate for addicted people respectivley.
+With parameters  $\pi_1$, $\pi_2$,  $\pi_3$, $\pi_4$, and $\pi_5$ being the 'infectiveness' of the drug for susceptible people, the rate that people stop trying the drug, the rate in which people become addicted, the 'infectiveness' for recovered people and the recovery rate for addicted people respectively.
 
 ```{python, echo = FALSE, SUARsims, fig.show="hold", out.width="50%" }
    
@@ -80,7 +78,7 @@ SUAR(0.001,0.001,0.001, 0.01, 0.001 ,60,20,10,10,100)
 
 
 ## SUAR Model with age
-Looking at the stationary points of the previous two models (see appendix for derivation), the only long term behaviour is to either kill off the drug and have no users or addicted people or have eveyone in the addicted or recovered group. However, this behaviour is not consistent with what we see in the real world, where we have a consistent number of people using and addicted to the drug, and a consistently high number of people who are susceptible to the drug. To fix we add age groups into the model, grouping them as children, teens, young adults, adults and seniors. Each of these groups have a distinct rate of death and births are porportioal to the number of young adults and adults. Seperating these groups also allows us to set different parameters according to each age group, capturing more nuanced beahviours such as more experiementation in young people.
+Looking at the stationary points of the previous two models (see appendix for derivation), the only long term behaviour is to either kill off the drug and have no users or addicted people or have eveyone in the addicted or recovered group. However, this behaviour is not consistent with what we see in the real world, where we have a consistent number of people using and addicted to the drug, and a consistently high number of people who are susceptible to the drug. To fix this issue we integrate age groups into the model, grouping the population as children, teens, young adults, adults and seniors. Each of these groups has a distinct rate of death and the births are proportional to the number of young adults and adults. Seperating the population also allows us to set different parameters according to each age group, capturing more nuanced behaviours such as an increased volume of experimentation of young people which would not have been identified otherwise.
 
 Another feture we wanted to tackle is how people recover. In the same way that people start using drugs based on interactions with others who are using the drug, we expect people to recover based on interactions with people who aren't using the drug. This can be represented by support groups, concered parents or friends. Furthermore, we can expect people in one agegroup to be influence by different ammoint from each agregreoup. We can store this information with a matrix $I$, where $I_{ij}$ is the magnitude of the influence that group j has on group i.
 We can now go in to further simplify this by defining two new terms, the positive and negitive influence on a age group $i$, to be:
