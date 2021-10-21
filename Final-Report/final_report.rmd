@@ -132,7 +132,7 @@ SUAR_20(aging_rate,birth_rate,death_rate, I, P, X0,600)
 ```
 
 ## Simplified SUAR Model with age
-After building the SUAR model with different age groups, we toyed arroung with various combinations of paramenters to see how the model reacted. 
+After creating the SUAR model with age groups, we experimented with various combinations of parameters to see how the model reacted. 
 However, we found that with 20 compartments and 73 parameters, it is realy hard to go through all the combinations to find meaningfull results from the model. We could see that there were stationary points for the population portions, but finding them analyticaly was near impossible. Because of this, we sought to find a way to simplify the model to produce results that are easier to understand. We did this by removing the different age groups all together, while keeping the equations describing the model the same. By removing the age groups, the equations dramaticaly simplify into this form;
 
               
@@ -150,7 +150,7 @@ SUAR_5(0.001,0.001,0.001, 0.01, 0.001,0.001,[0.0001,0.0005,0.001,0.0001],60,20,1
 
 
 ```
-Looking at this model, it is clear to see that we will only find stationary points when births and deaths are equal. However we also want to see long term trends in growing and shrinking populations. To do this, we look at this model through populaton portions, redefinig the system as:
+Looking at this model, it is clear to see that we will only find stationary points when births and deaths are equal. However we also want to see long term trends in growing and shrinking populations. To do this, we look at this model through population portions, redefinig the system as:
 
 $$ T = S + U + A + R $$
 $$ T' = b(S+U+A+R)  -d_SS -d_UU - d_AA - d_RR $$
