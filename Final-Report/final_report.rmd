@@ -492,7 +492,18 @@ kable(avg)
  3) Betterhealth.vic.gov.au. 2021. Drug use in Victoria - Better Health Channel. [online] Available at: <https://www.betterhealth.vic.gov.au/health/healthyliving/drug-use-in-victoria> [Accessed 21 October 2021].
  4) Thedoctors.com. 2021. U.S. Surgeon General Discusses the Opioid Epidemic. [online] Available at: <https://www.thedoctors.com/articles/u.s.-surgeon-general-discusses-the-opioid-epidemic/> [Accessed 21 October 2021].
  5) Caulkins, Jonathan P, Dietze, Paul, & Ritter, Alison. (2007). Dynamic compartmental model of trends in Australian drug use. Health Care Management Science, 10(2), 151–162. https://doi.org/10.1007/s10729-007-9012-0
+ 6) Harvim, P., Zhang, H., Georgescu, P., & Zhang, L. (2021). Cigarette smoking on college campuses: An epidemical modelling approach. Journal of Applied Mathematics and Computing, 65(1), 515–540. https://doi.org/10.1007/s12190-020-01402-y
+ 7) Nyabadza, F., Njagarah, J. B. H., & Smith, R. J. (2013). Modelling the Dynamics of Crystal Meth (‘Tik’) Abuse in the Presence of Drug-Supply Chains in South Africa. Bulletin of Mathematical Biology, 75(1), 24–48. https://doi.org/10.1007/s11538-012-9790-5
 
 
 
+
+Discussion
+	How does the first generation of users/addicteds come about?
+	For non-illicit drugs like cigarettes and alcohol, marketing stragies from distributors like television ads, billboards etc. can persuade susceptible members to initiate. We suggest the forcing parameter to be a function of the industry's market cap.
+		Australia has plain packaging laws to dampen the forcing parameter.
+	For illicit drugs, TK depends on network effects so an initial seed (source)
+	Online drug markets like The Silk Road can be assumed to have no interaction with non-users. Its only effect is to the accessibility of drugs for people in compartment U and A.
+Question
+	Which one is more effective in ending drug use: stopping drug labs and choking supply OR arresting drug users OR legalise drugs?
 
