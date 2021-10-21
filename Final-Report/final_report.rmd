@@ -2,16 +2,18 @@
 title : 'Modelling Drug Use in Communities'
 author:  'Alfie Chadwick, Kevin Dai, Chrysovalantis Thomopoulos'
 output: pdf_document
+
 ---
 
 # Introduction
-For years, policymakers have been wondering why and how do drugs travel through the community and what they can do to minimise the harm users potentially  cause to themselves and the people surrounding them. In this paper, we aim to understand how drug use and addiction develops in a community and what factors can be tweaked to alter the  long term distributions of drug use, abuse and addiction in the community.
+For years, policymakers have been wondering why and how do drugs travel through the community and what they can do to minimise the harm users potentially  cause to themselves and the people surrounding them. In this paper, we aim to understand how drug use and addiction develops in a community and what factors can be tweaked to alter the short term and long term distributions of drug use, abuse and addiction in the community.
 
-The wide variety of past articles and research papers on the topic indicate the importance of the issue. One article in particular by Mushanyu, J, Nyabadza, F, Muchatibaya, G, & Stewart, A G. R. (2016) touches on the importance of an adequate health care system since a limited rehabilitation capacity can increase the chances of a drug abuse epidemic. The methods used in this paper are discussed further along our own.
+The wide variety of past articles and research papers on the topic indicate the importance of the issue. One article in particular by Mushanyu et al. (2016) touches on the importance of an adequate health care system since a limited rehabilitation capacity can increase the chances of a drug abuse epidemic. The methods used in this paper are discussed further along our own.
 
 # Aim
 The aim of this project is to produce a model to capture the dynamics of drug use. The model should address how or when individuals become drug users, addicted drug users and abstainers, and have applications in addressing economic and policy decisions.
-Investigations by past researchers [REFERENCE] have used compartment models to delineate groups in a population.
+
+Investigations by past researchers (Caulkins et al., 2007; Harvim et al., 2021; Mushanyu et al., 2015, 2016; Nyabadza et al., 2013) have used compartment models to delineate groups in a population.
 
 # Method
 
@@ -34,13 +36,38 @@ The parameters $\pi_1$,$\pi_2$ and $\pi_3$ represent the 'infectiousness' of the
 
 We now look at some plots to see how this model behaves for various combinations of our parameters:
 
-```{python, echo = FALSE, SIRsims , fig.show="hold", out.width="50%" }
+```{python, echo = FALSE, fig1, fig.show="hold", out.width="50%" }
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from euler_methods import *
 
+def SIR(p1,p2,p3,S0,I0,R0,i):
 
+    vect_initial = np.array([S0,I0,R0]).T # vector of day index, suseptable, infected and recovered people
+    
+    output = pd.DataFrame(columns = ['day', 'S', 'I', 'R'])
+    j = 0
+    vect = vect_initial.copy()
+    
+    while j < i:
+        vectplus1 = np.zeros([3])
+        S = vect[0]
+        I = vect[1]
+        R = vect[2]
+        vectplus1[0] = S - p1 *S*I
+        vectplus1[1] = I +p1 *S*I + p2*R*I - p3*I
+        vectplus1[2] = R - p2*R*I + p3*I
+        output.loc[j] = np.concatenate((np.array([j]),vectplus1.T))
+        vect = vectplus1.copy()
+        j+=1
+    					
+    plt.plot(output['day'],output['S'])
+    plt.plot(output['day'],output['I'])
+    plt.plot(output['day'],output['R'])
+    plt.title('p1=' + str(p1) + ', p2=' + str(p2) + ', p3=' +str(p3))
+    plt.legend(['S','I','R'])
+    plt.show()
+   
 SIR(0.001,0.02,0,70,20,10,100)
 SIR(0.009, 0, 0.04, 70, 20,10,100)
 SIR(0.001,0.05,0.5,70,20,10, 100)
@@ -61,7 +88,36 @@ $$\frac{dR}{dt} =  \pi_5*A - \pi_4 *(A+U)*R $$
 
 With parameters  $\pi_1$, $\pi_2$,  $\pi_3$, $\pi_4$, and $\pi_5$ being the 'infectiveness' of the drug for susceptible people, the rate that people stop trying the drug, the rate that people become addicted, the 'infectiveness' for recovered people and the recovery rate for addicted people respectivley.
 
-```{python, echo = FALSE, SUARsims, fig.show="hold", out.width="50%" }
+```{python, echo = FALSE, fig2, fig.show="hold", out.width="50%" }
+def SUAR(p1,p2,p3, p4, p5 ,S0,U0,A0,R0,i):
+
+    vect_initial = np.array([S0,U0,A0,R0]).T # vector of day index, suseptable, infected and recovered people
+    
+    output = pd.DataFrame(columns = ['day', 'S', 'U','A', 'R'])
+    j = 0
+    vect = vect_initial.copy()
+    
+    while j < i:
+        vectplus1 = np.zeros([4])
+        S = vect[0]
+        U = vect[1]
+        A = vect[2]
+        R = vect[3]
+        vectplus1[0] = S -p1*S*(A+U) + p2*U
+        vectplus1[1] = U +p1*S*(A+U) - p2*U - p3*U
+        vectplus1[2] = A +p3*U + p4*(A+U)*R - p5*A
+        vectplus1[3] = R + p5*A -p4*(A+U)*R
+        output.loc[j] = np.concatenate((np.array([j]),vectplus1.T))
+        vect = vectplus1.copy()
+        j+=1
+    					
+    plt.plot(output['day'],output['S'])
+    plt.plot(output['day'],output['U'])
+    plt.plot(output['day'],output['A'])
+    plt.plot(output['day'],output['R'])
+    plt.title('p1=' + str(p1) + ', p2=' + str(p2) + ', p3=' +str(p3) + ', p4=' +str(p4) + ', p5=' +str(p5))
+    plt.legend(['S','U','A','R'])
+    plt.show()
    
 SUAR(0.01,0.001,0.001, 0.001, 0.001 ,60,20,10,10,100)
 SUAR(0.001,0.01,0.001, 0.001, 0.001 ,60,20,10,10,100)
@@ -70,7 +126,6 @@ SUAR(0.001,0.001,0.001, 0.01, 0.001 ,60,20,10,10,100)
 
 
 ```
-
 
 ## SUAR Model with age
 Looking at the stationary points of the previous two models (see appendix for derivation), the only long term behaviour is to either kill off the drug and have no users or addicted people or have eveyone in the addicted or recovered group. However, this behaviour is not consistent with what we see in the real world, where we have a consistent number of people using and addicted to the drug, and a consistently high number of people who are susceptible to the drug. To fix we add age groups into the model, grouping them as children, teens, young adults, adults and seniors. Each of these groups have a distinct rate of death and births are porportioal to the number of young adults and adults. Seperating these groups also allows us to set different parameters according to each age group, capturing more nuanced beahviours such as more experiementation in young people.
@@ -92,7 +147,100 @@ $$\frac{dR_i}{dt} = aA_{i-1}\pi_{i-1,5}P_{i-1} + aR_{i-1} - aR_i -R_i\pi_{i,4}N_
 With the paramers being sroted in matrices $\pi$, {d} and {i}, containing row-wise versions of the parameters for the SUAR model, the death rate for each comaprtment, and the influecne each age group has on the other, and scalars $a$ and $b$, which define the aging rate and the birth rate of the population.
 
 
-```{python, echo = FALSE, SUAR_20sims, fig.show="hold", out.width="50%"  }
+```{python, echo = FALSE, fig3, fig.show="hold", out.width="50%"  }
+
+def SUAR_20(aging_rate,birth_rate,death_rate, I, P, X0, steps):
+
+    C = pd.DataFrame(columns=['s', 't', 'a', 'r'], dtype='float128')
+    T = pd.DataFrame(columns=['s', 't', 'a', 'r'], dtype='float128')
+    Y = pd.DataFrame(columns=['s', 't', 'a', 'r'], dtype='float128')
+    A = pd.DataFrame(columns=['s', 't', 'a', 'r'], dtype='float128')
+    S = pd.DataFrame(columns=['s', 't', 'a', 'r'], dtype='float128')
+    
+    (n_age_groups, n_status) = np.shape(X0)
+    itterations  = 0
+    while itterations < steps:
+        C.loc[itterations] = X0[0]
+        T.loc[itterations] = X0[1]
+        Y.loc[itterations] = X0[2]
+        A.loc[itterations] = X0[3]
+        S.loc[itterations] = X0[4]
+    
+        i = 0
+    
+        IE = np.matmul(I, X0)
+    
+        Xn = np.zeros(np.shape(X0))
+    
+        while i < n_age_groups:
+                group_vect = X0[i].copy()
+                s = group_vect[0]
+                t = group_vect[1]
+                a = group_vect[2]
+                r = group_vect[3]
+                interaction_neg = np.sum(IE[i][[1, 2]])
+                interaction_pos = np.sum(IE[i][[0, 3]])
+    
+                Xn[i][0] = s - (s * P[i][0] * interaction_neg) + t * P[i][1] * interaction_pos
+                Xn[i][1] = t + (s * P[i][0] * interaction_neg) - t * P[i][1] * interaction_pos - t * P[i][2]
+                Xn[i][2] = a + t * P[i][2] + r * P[i][3] * interaction_neg - a * P[i][4] * interaction_pos
+                Xn[i][3] = r - r * P[i][3] * interaction_neg + a * P[i][4] * interaction_pos
+    
+                i += 1
+    
+        Xn_aged = np.zeros(np.shape(X0))
+    
+        i = 0
+        j = 0
+    
+        while i < n_age_groups:
+                j = 0
+                while j < n_status:
+                     if i == 0:
+                            if j == 0:
+                                Xn_aged[i][j] = Xn[i][j] * (1 - aging_rate - death_rate[i][j]) + birth_rate * sum(Xn[2] + Xn[3])
+                            else:
+                                Xn_aged[i][j] = Xn[i][j] * (1 - aging_rate - death_rate[i][j])
+                     else:
+                            Xn_aged[i][j] = Xn[i][j] * (1 - aging_rate - death_rate[i][j]) + X0[i - 1][j] * aging_rate
+                     j += 1
+                i += 1
+        X0 = Xn_aged
+        itterations += 1
+    
+    
+    plt.plot(A.index.values,C['s'])
+    plt.plot(A.index.values,C['t'])
+    plt.plot(A.index.values,C['a'])
+    plt.plot(A.index.values,C['r'])
+    plt.plot(A.index.values,T['s'])
+    plt.plot(A.index.values,T['t'])
+    plt.plot(A.index.values,T['a'])
+    plt.plot(A.index.values,T['r'])
+    plt.plot(A.index.values,Y['s'])
+    plt.plot(A.index.values,Y['t'])
+    plt.plot(A.index.values,Y['a'])
+    plt.plot(A.index.values,Y['r'])
+    plt.plot(A.index.values,A['s'])
+    plt.plot(A.index.values,A['t'])
+    plt.plot(A.index.values,A['a'])
+    plt.plot(A.index.values,S['r'])
+    plt.plot(A.index.values,S['s'])
+    plt.plot(A.index.values,S['t'])
+    plt.plot(A.index.values,S['a'])
+    plt.plot(A.index.values,S['r'])
+    plt.title("Raw Populations") 
+    plt.show()
+    
+    plt.title("Population Portions")
+    pop = C['s']+T['s']+Y['s']+A['s']+S['s'] + C['t']+T['t']+Y['t']+A['t']+S['t'] + C['a']+T['a']+Y['a']+A['a']+S['a'] + C['r']+T['r']+Y['r']+A['r']+S['r']
+    plt.plot(A.index.values,(C['s']+T['s']+Y['s']+A['s']+S['s'])/pop)
+    plt.plot(A.index.values,(C['t']+T['t']+Y['t']+A['t']+S['t'])/pop)
+    plt.plot(A.index.values,(C['a']+T['a']+Y['a']+A['a']+S['a'])/pop)
+    plt.plot(A.index.values,(C['r']+T['r']+Y['r']+A['r']+S['r'])/pop)
+    plt.legend(['S','U','A','R'])
+    plt.show()
+    
 aging_rate = 0.05
 birth_rate = 0.07
 death_rate = 0.1*np.array([[0.2, 0.2, 0.2, 0.2],
@@ -135,7 +283,38 @@ $$\frac{dU}{dt} = S\pi_1N -U\pi_2P - U\pi_3 - d_UU  $$
 $$\frac{dA}{dt} = U\pi_3 - A\pi_4P + R\pi_5N - d_AA$$
 $$\frac{dR}{dt} = A\pi_4P - R\pi_5N - d_RR $$
 
-```{python, echo = FALSE, SUAR_5Sims, fig.show="hold", out.width="50%" }
+```{python, echo = FALSE, fig4, fig.show="hold", out.width="50%" }
+def SUAR_5(p1,p2,p3, p4, p5,b,d,S0,U0,A0,R0,i):
+
+    vect_initial = np.array([S0,U0,A0,R0]).T # vector of day index, suseptable, infected and recovered people
+    
+    output = pd.DataFrame(columns = ['day', 'S', 'U','A', 'R'])
+    j = 0
+    vect = vect_initial.copy()
+    
+    while j < i:
+        vectplus1 = np.zeros([4])
+        S = vect[0]
+        U = vect[1]
+        A = vect[2]
+        R = vect[3]
+        vectplus1[0] = S - p1*S*(A+U) + p2*U*(S+R)  - d[0]*S + b*(S+U+A+R) 
+        vectplus1[1] = U + p1*S*(A+U) - p2*U*(S+R) - p3*U - d[1]*U
+        vectplus1[2] = A + p3*U + p4*(A+U)*R - p5*A*(R+S) - d[2]*A
+        vectplus1[3] = R + p5*A*(S+R) - p4*(A+U)*R - d[3]*R
+
+        output.loc[j] = np.concatenate((np.array([j]),vectplus1.T))
+        vect = vectplus1.copy()
+        j+=1
+    output['pop'] = output['S'] + output['U'] + output['A'] + output['R']
+    plt.plot(output['day'],output['S']/output['pop'])
+    plt.plot(output['day'],output['U']/output['pop'])
+    plt.plot(output['day'],output['A']/output['pop'])
+    plt.plot(output['day'],output['R']/output['pop'])
+    plt.title('Portion: p1=' + str(p1) + ', p2=' + str(p2) + ', p3=' +str(p3) + ', p4=' +str(p4) + ', p5=' +str(p5))
+    plt.legend(['S','U','A','R'])
+    plt.show()
+
 
 SUAR_5(0.01,0.001,0.001, 0.001, 0.001,0.001,[0.0001,0.0005,0.001,0.0001] ,60,20,10,10,300)
 SUAR_5(0.001,0.01,0.001, 0.001, 0.001,0.001,[0.0001,0.0005,0.001,0.0001],60,20,10,10,300)
@@ -165,7 +344,41 @@ $$ \frac{dr}{dt} = (a\pi_4(s+r) - r\pi_5(u+a) -d_Rr )-r(1 - d_Ss - d_Uu - d_Aa -
 
 
 
-```{python, echo = FALSE, SUARnormsims, fig.show="hold", out.width="50%" }
+```{python, echo = FALSE, fig5, fig.show="hold", out.width="50%" }
+def SUAR_norm(p1,p2,p3, p4, p5,d,S0,U0,A0,R0,i,h):
+
+    vect_initial = np.array([S0,U0,A0,R0]).T # vector of day index, suseptable, infected and recovered people
+    
+    output = pd.DataFrame(columns = ['day', 's', 'u','a', 'r'])
+    j = 0
+    vect = vect_initial.copy()
+    
+    ds = d[0]
+    du = d[1]
+    da = d[2]
+    dr = d[3]
+    
+    while j < i:
+        vectplus1 = np.zeros([4])
+        s = vect[0]
+        u = vect[1]
+        a = vect[2]
+        r = vect[3]
+        vectplus1[0] = s +h*((-s*p1*(u+a)+u*p2*(s+r)  -ds*s + 1)-s *(1 - ds*s - du*u - da*a - dr*r)) 
+        vectplus1[1] = u +h*((s*p1*(u+a)-u*p2*(s+r) - u*p3 -du*u )-u*(1 - ds*s - du*u - da*a - dr*r))
+        vectplus1[2] = a +h*((u*p3 -a*p4*(s+r) + r*p5*(u+a) -da*a )-a*(1 - ds*s - du*u - da*a - dr*r))
+        vectplus1[3] = r +h*((a*p4*(s+r) - r*p5*(u+a) -dr*r )-r*(1 - ds*s -du*u - da*a - dr*r))
+        output.loc[j] = np.concatenate((np.array([j*h]),vectplus1.T))
+        vect = vectplus1.copy()
+        j+=1
+    plt.plot(output['day'],output['s'])
+    plt.plot(output['day'],output['u'])
+    plt.plot(output['day'],output['a'])
+    plt.plot(output['day'],output['r'])
+    plt.title('Portion: p1=' + str(p1) + ', p2=' + str(p2) + ', p3=' +str(p3) + ', p4=' +str(p4) + ', p5=' +str(p5))
+    plt.legend(['S','U','A','R'])
+    plt.show()
+    
 
 SUAR_norm(10,1,1,1,1,[0.1,0.5,1,0.1],0.6,0.2,0.1,0.1,50,0.1)
 SUAR_norm(1,10,1,1,1,[0.1,0.5,1,0.1],0.6,0.2,0.1,0.1,50,0.1)
@@ -177,32 +390,54 @@ SUAR_norm(1,1,1,10,1,[0.1,0.5,1,0.1],0.6,0.2,0.1,0.1,50,0.1)
 
 # Results
 
-
 Looking at the above equations, it may not be obvious as to what the stationary points are. However, since we are now looking at population portion, we can think of deaths as a movement from all compartments to the susceptible compartments. This makes it clear the only  stationary point is when all the people are in the susceptible compartment, meaning the drug is 'extinct'.  Similar, the drug is also extinct when everyone is either in the recovered or susceptible group, as one just has to wait for the recovered people to die for the portion of S to reach 1. These two facts can be seen in appendix 3. This result was confirmed using matlab in appendix 4.
 
 Another point of interest is the conditional stationary points, that occur when the parameters are at specific values. 
 One such case is when the $\pi$ parameters are much greater than the death rate, indicating transition between the groups occur rapidly in comparison to a lifespan. In this case pseudo-stationary points  exist similar to those described in appendix 2.
 
-
-
 While simulating various combinations of parameters, we found points that caused underflow errors when calculating the rate of change, since it was so low. Although not a true stationary point, as confirmed by the code in appendix 4, these points represents areas where the model will change extremely slowly, creating another pseudo-stationary point. Looking at some initial population and death parameters, we can plot the number of simulations that end in extinction as a function of their $\pi$ parameters as shown below.
 
-```{python, simforallparams, echo = FALSE}
+```{python, fig6, echo = FALSE}
+def SUAR_norm(p1,p2,p3, p4, p5,d,S0,U0,A0,R0,i,h):
+
+    vect_initial = np.array([S0,U0,A0,R0]).T
+
+    j = 0
+    vect = vect_initial.copy()
+
+    ds = d[0]
+    du = d[1]
+    da = d[2]
+    dr = d[3]
+
+    while j < i:
+        vectplus1 = np.zeros([4])
+        s = vect[0]
+        u = vect[1]
+        a = vect[2]
+        r = vect[3]
+        vectplus1[0] = s +h*((-s*p1*(u+a)+u*p2*(s+r)  -ds*s + 1)-s *(1 - ds*s - du*u - da*a - dr*r))
+        vectplus1[1] = u +h*((s*p1*(u+a)-u*p2*(s+r) - u*p3 -du*u )-u*(1 - ds*s - du*u - da*a - dr*r))
+        vectplus1[2] = a +h*((u*p3 -a*p4*(s+r) + r*p5*(u+a) -da*a )-a*(1 - ds*s - du*u - da*a - dr*r))
+        vectplus1[3] = r +h*((a*p4*(s+r) - r*p5*(u+a) -dr*r )-r*(1 - ds*s -du*u - da*a - dr*r))
+        vect = vectplus1.copy()
+        j+=1
+
+    if s + r > 0.98:
+        return True
+    else:
+        return False
+
 res = pd.DataFrame(columns=['p1','p2','p3','p4','p5', 'extinct'])
-use = pd.DataFrame(columns=['p1','p2','p3','p4','p5', 'p_using'])
 for p1 in range(-3,4):
     for p2  in range(-3,4):
         for p3 in range(-3,4):
             for p4 in range(-3,4):
                 for p5 in range(-3,4):
 
-                    fp = SUAR_norm(2**p1, 2**p2, 2**p3, 2**p4, 2**p5, [1, 1, 1, 1], 0.6, 0.2, 0.1, 0.1, 100, 0.1,plot = False)
-                    if fp[0]+fp[3] > 0.9:
-                        bool = True
-                    else:
-                        bool = False
+                    bool = SUAR_norm(2**p1, 2**p2, 2**p3, 2**p4, 2**p5, [1, 1, 1, 1], 0.6, 0.2, 0.1, 0.1, 100, 0.1)
                     res.loc[len(res)] = [float(p1),float(p2),float(p3),float(p4), float(p5), bool]
-                    use.loc[len(use)] = [float(p1),float(p2),float(p3),float(p4), float(p5), fp[1]+fp[2]]
+
 p = ['p1','p2','p3','p4','p5']
 
 xlabels = ['-3','-2','-1','0','1','2','3']
@@ -237,45 +472,7 @@ plt.show()
 
 From this plot, one can see a big factor that influences the creation of these pseudo stationary points is the magnitude of $\pi_1$, an in a lesser extent the ratio of $\pi_1$ and $\pi_2$. In this case, any births will rapidly transition to the using category, meaning that they then have the potential to become addicted. This slows the transition to a state where $r+s = 1$, creating the pseudo stationary point.
 
-Another result one can take from the data is the number of people who are using or addicted to the drug at the pseudo-stationary points, as shown in these plots below.
 
-```{python,pssp, echo = FALSE}
-
-use = use[res['extinct'] == False]
-fig, axs = plt.subplots(5, 5)
-for i , a in enumerate( p):
-    for j , b in enumerate(p):
-        if i !=j:
-            w = use[[a,b,'p_using']].groupby([a,b]).mean().unstack()
-            t = axs[i,j].pcolormesh(w, vmin = 0, vmax = 1)
-        if i == 4:
-            axs[i,j].set_xticks(np.arange(7) + 0.5, minor=False)
-            axs[i,j].set_xticklabels(xlabels, fontdict=None, minor=False)
-            axs[i,j].set_xlabel('Log2(' + b +')')
-        else:
-            axs[i,j].get_xaxis().set_visible(False)
-        if j == 0 :
-            axs[i,j].set_yticks(np.arange(7) + 0.5, minor=False)
-            axs[i,j].set_yticklabels(xlabels, fontdict=None, minor=False)
-            axs[i,j].set_ylabel('Log2(' + a +')')
-        else:
-            axs[i,j].get_yaxis().set_visible(False)
-
-fig.subplots_adjust(right=0.8)
-cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
-c = fig.colorbar(t, cax=cbar_ax)
-fig.suptitle("Average portion of people using or addicted at psuedo-statioanry Points \n ds=1, du=1, da=1,dr=1 s0=0.6, u0=0.2, a0=0.1, r0=0.1, Total Sims = 216")
-plt.show()
-```
-Looking at these plots we can see the following behaviours:
-
-* Bigger $\pi_1$ -> Higher Mean
-* Bigger $\pi_2$ -> Lower Mean
-* Bigger $\pi_3$ -> Lower Mean
-* Bigger $\pi_4$ -> Lower Mean
-* Bigger $\pi_5$ -> Higher Mean
-
-Therefore, in terms of tweaking the long term state of drug use in communities, the best way to minimise drug use is to minimise $\pi_1$ such that a pseudo stationary point wont be reached and the drug will die out. If this cant be done, the number of people using or addicted to drugs can be minimised by lowering the values of $\pi_2, \pi_3, \pi_4$ or maximising the value of $\pi_5$ to make the pseudo-stationay point have a maxal number of people not using the drug.
 
 # Discussion
 
@@ -385,7 +582,6 @@ $$ \frac{dr}{dt} = (-d_Rr )-r(1 - d_Ss - d_Rr) = (s - 1)*(1 + d_r*s - d_s*s)$$
  1) Mushanyu, J, Nyabadza, F, Muchatibaya, G, & Stewart, A G. R. (2016). Modelling Drug Abuse Epidemics in the Presence of Limited Rehabilitation Capacity. Bulletin of Mathematical Biology, 78(12), 2364–2389. https://doi.org/10.1007/s11538-016-0218-5
  2) Mushanyu, J, Nyabadza, F, & Stewart, A G R. (2015). Modelling the trends of inpatient and outpatient rehabilitation for methamphetamine in the Western Cape province of South Africa. BMC Research Notes, 8(796), 797–797. https://doi.org/10.1186/s13104-015-1741-4
  3) Betterhealth.vic.gov.au. 2021. Drug use in Victoria - Better Health Channel. [online] Available at: <https://www.betterhealth.vic.gov.au/health/healthyliving/drug-use-in-victoria> [Accessed 21 October 2021].
- 4) 
-
-
-
+ 4) Nyabadza, F., Njagarah, J. B. H., & Smith, R. J. (2013). Modelling the Dynamics of Crystal Meth (‘Tik’) Abuse in the Presence of Drug-Supply Chains in South Africa. Bulletin of Mathematical Biology, 75(1), 24–48. https://doi.org/10.1007/s11538-012-9790-5
+ 5) Harvim, P., Zhang, H., Georgescu, P., & Zhang, L. (2021). Cigarette smoking on college campuses: An epidemical modelling approach. Journal of Applied Mathematics and Computing, 65(1), 515–540. https://doi.org/10.1007/s12190-020-01402-y
+ 6) Caulkins, J. P., Dietze, P., & Ritter, A. (2007). Dynamic compartmental model of trends in Australian drug use. Health Care Management Science, 10(2), 151–162. https://doi.org/10.1007/s10729-007-9012-0
