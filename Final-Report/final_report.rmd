@@ -197,19 +197,12 @@ While simulating various combinations of parameters, we found points that caused
 ```{python, simforallparams, echo = FALSE}
 res = pd.DataFrame(columns=['p1','p2','p3','p4','p5', 'extinct'])
 use = pd.DataFrame(columns=['p1','p2','p3','p4','p5', 'p_using'])
-for p1 in range(-3,4):
-    for p2  in range(-3,4):
-        for p3 in range(-3,4):
-            for p4 in range(-3,4):
-                for p5 in range(-3,4):
 
-                    fp = SUAR_norm(2**p1, 2**p2, 2**p3, 2**p4, 2**p5, [1, 1, 1, 1], 0.6, 0.2, 0.1, 0.1, 100, 0.1,plot = False)
-                    if fp[0]+fp[3] > 0.9:
-                        bool = True
-                    else:
-                        bool = False
-                    res.loc[len(res)] = [float(p1),float(p2),float(p3),float(p4), float(p5), bool]
-                    use.loc[len(use)] = [float(p1),float(p2),float(p3),float(p4), float(p5), fp[1]+fp[2]]
+res = pd.read_csv('../ss.csv')
+use =  pd.read_csv('../avg.csv')
+res.columns = ['p1','p2','p3','p4','p5', 'extinct']
+use.columns =  [ 'p1','p2','p3','p4','p5', 'p_using']
+
 p = ['p1','p2','p3','p4','p5']
 
 xlabels = ['-3','-2','-1','0','1','2','3']

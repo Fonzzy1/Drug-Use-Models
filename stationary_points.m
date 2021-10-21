@@ -8,46 +8,33 @@ ode4 =  (a*p4*(s+r) - r*p5*(u+a) -dr*r )-r*(1 - ds*s -du*u - da*a - dr*r);
 sums = s+u+a+r;
 
 
-odes = [ode1 == 0, ode2 == 0, ode3 == 0 , ode4 == 0, sums  == 1];
 
-o = [ode1, ode2, ode3 , ode4];
-
-j = jacobian(o,[s,u,a,r]);
+odes = [ode1 == 0, ode2 == 0, ode3 == 0 , ode4 == 0, sums  == 1, s>=0, u >= 0, a >=0, r>=0];
 
 
-h = 0.1;
+ss = [];
+avg = [];
 
-res = [];
+k = 3;
 
-
-for s = 0:h:1
-    for u = 0:h:1
-        for a = 0:h:1
-            r = 1 - s - u - a;
-            if r >= 0
-                    
-                    x = [s;u;a;r];
-                    d = (subs(j) * x +x);
-                    v = [s,u,a,r,d(1),d(2),d(3),d(4)];
-                    res = [res;v];
+for p1i = -k:k
+    for p2i   = -k:k
+        for p3i  = -k:k
+            for p4i  = -k:k
+                for p5i = -k:k
+                    [p1, p2, p3, p4, p5, ds, du, da, dr] = deal(2^p1i, 2^p2i, 2^p3i, 2^p4i, 2^p5i,1,1,1,1);
+                    sol = solve(subs(odes),'Real',true);
+                    ss = [use ; [p1i,p2i,p3i,p4i,p5i,length(sol.s) - 1]];
+                    if length(sol.s) > 1
+                        avg = [avg ; [p1i,p2i,p3i,p4i,p5i,mean(sol.u(2:length(sol.u)) + sol.a(2:length(sol.a)))]];
+                    end
+                end
             end
         end
     end
 end
 
-clear s u a r
-
-[p1, p2, p3, p4, p5, ds, du, da, dr] = deal(10,1,1, 1, 1,0.1,0.5,1,0.1);
-
-sres = subs(res) ;
-
-sol = solve(subs(odes),'Real',true);
 
 
-[s,u,a,r] = deal(0.122386,0.495595,0.339047,0.042971);
-chnage = simplify(subs(o));
-
-[s,u,a,r] = deal(1,0,0,0);
-real(eig(subs(j)))
-
-
+writematrix(double(avg),'avg.csv')
+writematrix(double(ss), 'ss.csv')
