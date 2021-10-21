@@ -10,9 +10,9 @@ For years, policymakers have been wondering why and how do drugs travel through 
 
 The wide variety of past articles and research papers on the topic indicate the importance of the issue. One article in particular by Mushanyu, J, Nyabadza, F, Muchatibaya, G, & Stewart, A G. R. (2016) touches on the importance of an adequate health care system since a limited rehabilitation capacity can increase the chances of a drug abuse epidemic. The methods used in this paper are discussed further along our own.
 
-
-
-
+# Aim
+The aim of this project is to produce a model to capture the dynamics of drug use. The model should address how or when individuals become drug users, addicted drug users and abstainers, and have applications in addressing economic and policy decisions.
+Investigations by past researchers [REFERENCE] have used compartment models to delineate groups in a population.
 
 # Method
 
