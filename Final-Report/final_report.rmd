@@ -12,7 +12,7 @@ For years, policymakers have been wondering why and how do drugs travel through 
 
 These were the words of Dr. Adams, the 20th surgeon general of the United States when asked about his main concerns and focus indicating the severity of the matter. Substance abuse is not only harmful for one's self but our community. Multiple research articles and papers in the past have modelled drug use. We have included some examples below from which we have taken inspiration and made comparisons.
 
-One article in particular by Mushanyu, J, Nyabadza, F, Muchatibaya, G, & Stewart, A G. R. (2016) touches on the importance of an adequate health care system since a limited rehabilitation capacity can increase the chances of a drug abuse epidemic. The methods used in this paper are discussed later.
+One article in particular by Mushanyu, J, Nyabadza, F, Muchatibaya, G, & Stewart, A G. R. (2016) touches on the importance of an adequate health care system since a limited rehabilitation capacity can increase the chances of a drug abuse epidemic. The methods used in this paper are discussed later. Also, Mushanyu, J, Nyabadza, F, & Stewart, A G R. (2015) focuses on some matters that are of great importance as well.
 
 # Aim
 The aim of this project is to produce a model to capture the dynamics of drug use. The model should address how or when individuals become drug users, addicted drug users and abstainers, and have applications in addressing economic and policy decisions.
@@ -184,12 +184,12 @@ SUAR_norm(1,1,1,10,1,[0.1,0.5,1,0.1],0.6,0.2,0.1,0.1,50,0.1)
 # Results
 
 
-We can think of deaths as a movement from all compartments to the susceptible compartments. This makes it clear that a  stationary point exists when all the people are in the susceptible compartment, meaning the drug is 'extinct'.  Similar, the drug is also extinct when everyone is either in the recovered or susceptible group, as one just has to wait for the recovered people to die for the portion of S to reach 1. These two facts can be seen in appendix 3. Let the stationary point at $s=1$ be the trivial stationary point.
+We can think of deaths as a movement from all compartments to the susceptible compartments. This makes it clear that a  stationary point exists when all the people are in the susceptible compartment, meaning the drug is 'extinct'.  Similarly, the drug is also extinct when everyone is either in the recovered or susceptible group, as one just has to wait for the recovered people to die for the portion of S to reach 1. These two facts can be seen in appendix 3. Let the stationary point at $s=1$ be the trivial stationary point.
 
 However, for some combinations of parameters, secondary stationary points are found. These non-trivial stationary points could not be found analyticaly using matlab, therefore their existance must be verified in a case by case basis, using the code in apendix 4. 
-Note that the all the death parametesr were set to one, meaning that these results are for drugs where the rate of death is independant of compartment. To find results for other sets of death parametrs, alter line 25 of appendix 4.
+Note that all the death parameters were set to one, meaning that these results are for drugs where the rate of death is independent of compartment. To find results for other sets of death parameters, line 25 of appendix 4 should be altered.
 
-Using the table of non trivial stationary points  (appendix 10), we can now plot the number of cobninations of parameters that lead to non-trival stationary points pairwise by parameter.
+Using the table of non trivial stationary points  (appendix 10), we can now plot the number of combinations of parameters that lead to non-trival stationary points pairwise by parameter.
 
 
 ```{python, simforallparams, echo = FALSE}
@@ -232,7 +232,7 @@ plt.show()
 
 ```
 
-From this plot, one can see a big factor that influences the creation of these non-trival stationary points is the magnitude of $\pi_1$, an in a lesser extent the ratio of $\pi_1$ and $\pi_2$. In this case, any births will rapidly transition to the using category, meaning that they then have the potential to become addicted. 
+From this plot, one can see a big factor that influences the creation of these non-trival stationary points is the magnitude of $\pi_1$, an in a lesser extent the ratio of $\pi_1$ and $\pi_2$. In this case, births will rapidly transition to the using category, meaning that they then have the potential to become addicted. 
 
 Another result one can take from the data is the number of people who are using or addicted to the drug at the pseudo-stationary points, as shown in these plots below.
 
@@ -279,27 +279,20 @@ Looking at these plots we can see the following behaviours:
 * Bigger $\pi_4$ -> Lower Mean
 * Bigger $\pi_5$ -> Higher Mean
 
-Therefore, in terms of tweaking the long term state of drug use in communities, the best way to minimise drug use is to minimise $\pi_1$ such that the drug will become extinct. If this cant be done, the number of people using or addicted to drugs can be minimised by lowering the values of $\pi_2, \pi_3, \pi_4$ or maximising the value of $\pi_5$ to make the stationay point have a minimal number of people using the drug.
+Therefore, in terms of the long term state of drug use in communities, the best way to minimise drug use is to minimise $\pi_1$ such that the drug becomes extinct. If this can not be done, the number of people using or addicted to drugs can be minimised by lowering the values of $\pi_2, \pi_3, \pi_4$ or maximising the value of $\pi_5$ to make the stationary point have a minimal number of people using the drug.
 
 # Discussion
 
-// Compare our model
-// Inspirations
-// Limitations
-// Future Tweaks
-
-In this part of the discussion, we aim to compare our model with the one presented by
+In this part of the discussion, we aim to compare our model with the one by
 Mushanyu, J, Nyabadza, F, Muchatibaya, G, & Stewart, A G. R. (2016) and decide what future tweaks and changes can be made to further improve our own model.
 The use of protein and ligand bonding as well as the Hill function is quite interesting
 since the authors have effectively linked Biological Modelling and altered it to their own advantage. 
 Firstly, protein and a ligand bonding forming a new product has equivalently been transformed into addicts connecting and creating a bond with a recovery center and as a result being transformed themselves. They have also used the term ‘Cooperativity’ as a parameter which is how other rehabilitants affect other users either negatively or positively. 
 In our case we have used positive and negative influence of age groups and/or compartment models on each other based on interactions instead of cooperativity. Cooperativity is a way more specific and detailed parameter whilst our own is more general. Applying both the protein-ligand equivalent and the subdivision of a Recovered Cooperation parameter could help our model in the future.
-Secondly, the Hill Function was adjusted to suit their drug model. They split Rehabilitation in two sections. Outpatient rehabilitation allows the user to stay productive and around their family while inpatient rehabilitation involves rehabilitation centers and more strict rules. Of course, limited resources and capacities affect users’ choices. The rehabilitation capacities are limited in their own way as well since in a lot of countries the health care department is not adequate to help all users which makes the model realistic and pragmatic.
+Secondly, the Hill Function was adjusted to suit their drug model. They split Rehabilitation in two sections. Outpatient rehabilitation allows the user to stay productive and around their family while inpatient rehabilitation involves rehabilitation centers and more strict rules. Of course, limited resources and capacities affect users choices. The rehabilitation capacities are limited in their own way as well since in a lot of countries Health Care Departments are not adequate enough to help all users which makes the model more realistic.
 We on the other hand have sub compartments in the Infected Area which we have split into Using and Addicted compartments while we have not done the same in the Susceptible and Recovered compartments. Integrating those in the future as well as saturation effects can make our model more effective.
 
-
-
-
+Another downside of our model is the fact that we have not focused on one specific substance and rather decided to adopt a more general approach to the problem. When focusing on one substance and/or a "family" of substances such as in the paper by Mushanyu, J, Nyabadza, F, & Stewart, A G R. (2015) we can narrow down our results and get more specific and detailed answers.
 
 # Conclusion
 
@@ -496,6 +489,8 @@ kable(avg)
  2) Mushanyu, J, Nyabadza, F, & Stewart, A G R. (2015). Modelling the trends of inpatient and outpatient rehabilitation for methamphetamine in the Western Cape province of South Africa. BMC Research Notes, 8(796), 797–797. https://doi.org/10.1186/s13104-015-1741-4
  3) Betterhealth.vic.gov.au. 2021. Drug use in Victoria - Better Health Channel. [online] Available at: <https://www.betterhealth.vic.gov.au/health/healthyliving/drug-use-in-victoria> [Accessed 21 October 2021].
  4) Thedoctors.com. 2021. U.S. Surgeon General Discusses the Opioid Epidemic. [online] Available at: <https://www.thedoctors.com/articles/u.s.-surgeon-general-discusses-the-opioid-epidemic/> [Accessed 21 October 2021].
+ 5) Caulkins, Jonathan P, Dietze, Paul, & Ritter, Alison. (2007). Dynamic compartmental model of trends in Australian drug use. Health Care Management Science, 10(2), 151–162. https://doi.org/10.1007/s10729-007-9012-0
+
 
 
 
