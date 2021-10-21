@@ -24,16 +24,16 @@ Firstly, this model is very simple and can be easily adapted to our own needs wi
 Secondly, since we are looking at drug use in a population, relying on mass action rather than discrete modeling allows us to further simplify the model.
 Thirdly, the idea that addiction is caused by interactions between individuals seems to be a good assumption for drug use as one would expect people to become familiar and subsequently addicted to certain substances by being associated to people with them.
 
-One divergence we made from the most basic SIR model is allowing for relapse from the recovered group back into the infected group. This represents how recovering addicts will become addicted again at a different rate to people who have never used the drug before. However, we never move people back into the suseptible group as addiction is said to be 'lifelong'.
+One divergence we made from the most basic SIR model is allowing for relapse from the recovered group back into the infected group. This represents how recovering addicts will become addicted again at a different rate to people who have never used the drug before. However, an important fact is that people can not move back into the susceptible group as addiction is said to last a lifetime.
 
-The SIR model can be defined with the following equations:
+Our SIR model is defined by the following equations:
 $$\frac{dS}{dt} = -\pi_1 * S * I $$
 $$\frac{dI}{dt} = \pi_1 * S * I + \pi_2 * R * I - \pi_3 *  I $$
 $$\frac{dR}{dt} = -\pi_2 * R * I + \pi_3 * I $$
 
-With the parameters $\pi_1$,$\pi_2$ and $\pi_3$ representing the 'infectiousness' of the drug for susceptible people, the infectiousness for recovering people and the rate of recovery for the drug respecivley.
+The parameters $\pi_1$,$\pi_2$ and $\pi_3$ represent the 'infectiousness' of the drug for susceptible and recovering individuals and the rate of recovery from the drug respectively.
 
-We can now look at some plots to see how this model plays out for various combinations of parameters:
+We now look at some plots to see how this model behaves for various combinations of our parameters:
 
 ```{python, echo = FALSE, fig1, fig.show="hold", out.width="50%" }
 import numpy as np
