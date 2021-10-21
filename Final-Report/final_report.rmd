@@ -242,8 +242,17 @@ fig, axs = plt.subplots(5, 5)
 for i , a in enumerate( p):
     for j , b in enumerate(p):
         if i !=j:
-            w = use[[a,b,'p_using']].groupby([a,b]).mean().unstack()
-            t = axs[i,j].pcolormesh(w, vmin = 0, vmax = 1)
+            w = use[[a,b,'p_using']].groupby([a,b]).mean()
+            dk = pd.DataFrame(np.nan, columns=xlabels, index=xlabels)
+            for l in xlabels:
+                for m in xlabels:
+                    try:
+                        dk[m][l] = w.loc[(int(l), int(m))]
+                    except:
+                        pass
+
+
+            t = axs[i,j].pcolormesh(dk, vmin = 0, vmax = 1)
         if i == 4:
             axs[i,j].set_xticks(np.arange(7) + 0.5, minor=False)
             axs[i,j].set_xticklabels(xlabels, fontdict=None, minor=False)
@@ -271,7 +280,7 @@ Looking at these plots we can see the following behaviours:
 * Bigger $\pi_4$ -> Lower Mean
 * Bigger $\pi_5$ -> Higher Mean
 
-Therefore, in terms of tweaking the long term state of drug use in communities, the best way to minimise drug use is to minimise $\pi_1$ such that the drug will become extinct. If this cant be done, the number of people using or addicted to drugs can be minimised by lowering the values of $\pi_2, \pi_3, \pi_4$ or maximising the value of $\pi_5$ to make the pseudo-stationay point have a maxal number of people not using the drug.
+Therefore, in terms of tweaking the long term state of drug use in communities, the best way to minimise drug use is to minimise $\pi_1$ such that the drug will become extinct. If this cant be done, the number of people using or addicted to drugs can be minimised by lowering the values of $\pi_2, \pi_3, \pi_4$ or maximising the value of $\pi_5$ to make the stationay point have a minimal number of people using the drug.
 
 # Discussion
 
