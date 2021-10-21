@@ -16,7 +16,7 @@ One article in particular by Mushanyu, J, Nyabadza, F, Muchatibaya, G, & Stewart
 
 # Aim
 The aim of this project is to produce a model to capture the dynamics of drug use. The model should address how or when individuals become drug users, addicted drug users and abstainers, and have applications in addressing economic and policy decisions.
-Investigations by past researchers [REFERENCE] have used compartment models to delineate groups in a population.
+Investigations by past researchers [REFERENCE] have used compartment models to delianate groups in a population as well.
 
 # Method
 
