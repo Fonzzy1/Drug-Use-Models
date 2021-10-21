@@ -6,11 +6,10 @@ output: pdf_document
 ---
 
 # Introduction
-For years, policymakers have been wondering why and how do drugs travel through the community and what they can do to minimise the harm they potentially  cause. In this paper, we aim to understand how drug use and addiction develops in a community and what factors can be tweaked to alter the short term and long term distributions of drug use, abuse and addiction in the community.
+For years, policymakers have been wondering why and how do drugs travel through the community and what they can do to minimise the harm users potentially  cause to themselves and the people surrounding them. In this paper, we aim to understand how drug use and addiction develops in a community and what factors can be tweaked to alter the short term and long term distributions of drug use, abuse and addiction in the community.
 
-The wide variety of past articles and research papers on the topic indicate the importance of the issue. One article in particular by Mushanyu, J, Nyabadza, F, Muchatibaya, G, & Stewart, A G. R. touches on the importance of an adequate health care system since a limited rehabilitation capacity can increase the chances of a drug abuse epidemic. The methods used in this paper are discussed further along our own.
+The wide variety of past articles and research papers on the topic indicate the importance of the issue. One article in particular by Mushanyu, J, Nyabadza, F, Muchatibaya, G, & Stewart, A G. R. (2016) touches on the importance of an adequate health care system since a limited rehabilitation capacity can increase the chances of a drug abuse epidemic. The methods used in this paper are discussed further along our own.
 
-Also, another interesting article is 
 
 
 
@@ -18,12 +17,12 @@ Also, another interesting article is
 # Method
 
 ## Initial Model: SIR
-It's common to liken drug use to disease, treating drug addiction as an infection that can be recovered from. Using this analogy, we began looking into how diseases are modeled and how we can adapt this model to fit drug usage.
+It's common to liken drug use to disease, treating drug addiction as an infection that can be recovered from. Using this analogy, we began looking into how diseases are modeled and how we can adapt our own model to fit drug usage.
 One of the simplest drug models is the SIR model, a compartment model based on the concept of mass action that sees infections as caused by interactions between infected people and susceptible people.
-There are a few reasons that this model is a good fit to begin modeling drug use:
-Firstly, this model is very simple and easily adaptable to extra compartments or conditions on transfer.
-Secondly, since we are looking at drug use in a population, relying on mass action rather than discrete modeling allows us to simplify the model.
-Thirdly, the idea that addiction is caused by individuals interacting seems to be a good assumption for drug use as you would expect people to become addicted by being around other people with the drug.
+There are a few reasons that this model is a good starting point for any type of drug modelling:
+Firstly, this model is very simple and can be easily adapted to our own needs with extra compartments and transferable conditions.
+Secondly, since we are looking at drug use in a population, relying on mass action rather than discrete modeling allows us to further simplify the model.
+Thirdly, the idea that addiction is caused by interactions between individuals seems to be a good assumption for drug use as one would expect people to become familiar and subsequently addicted to certain substances by being associated to people with them.
 
 One divergence we made from the most basic SIR model is allowing for relapse from the recovered group back into the infected group. This represents how recovering addicts will become addicted again at a different rate to people who have never used the drug before. However, we never move people back into the suseptible group as addiction is said to be 'lifelong'.
 
@@ -580,6 +579,9 @@ $$ \frac{dr}{dt} = (-d_Rr )-r(1 - d_Ss - d_Rr) = (s - 1)*(1 + d_r*s - d_s*s)$$
 # References
 
  1) Mushanyu, J, Nyabadza, F, Muchatibaya, G, & Stewart, A G. R. (2016). Modelling Drug Abuse Epidemics in the Presence of Limited Rehabilitation Capacity. Bulletin of Mathematical Biology, 78(12), 2364–2389. https://doi.org/10.1007/s11538-016-0218-5
- 2) 
+ 2) Mushanyu, J, Nyabadza, F, & Stewart, A G R. (2015). Modelling the trends of inpatient and outpatient rehabilitation for methamphetamine in the Western Cape province of South Africa. BMC Research Notes, 8(796), 797–797. https://doi.org/10.1186/s13104-015-1741-4
+ 3) Betterhealth.vic.gov.au. 2021. Drug use in Victoria - Better Health Channel. [online] Available at: <https://www.betterhealth.vic.gov.au/health/healthyliving/drug-use-in-victoria> [Accessed 21 October 2021].
+ 4) 
+
 
 
