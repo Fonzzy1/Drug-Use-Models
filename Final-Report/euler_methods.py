@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 def SIR(p1,p2,p3,S0,I0,R0,i):
 
-    vect_initial = np.array([S0,I0,R0]).T # vector of day index, suseptable, infected and recovered people
+    vect_initial = np.array([S0,I0,R0]).T
     
     output = pd.DataFrame(columns = ['day', 'S', 'I', 'R'])
     j = 0
@@ -25,14 +25,16 @@ def SIR(p1,p2,p3,S0,I0,R0,i):
     plt.plot(output['day'],output['S'])
     plt.plot(output['day'],output['I'])
     plt.plot(output['day'],output['R'])
-    plt.title('p1=' + str(p1) + ', p2=' + str(p2) + ', p3=' +str(p3))
+    plt.title('p1=' + str(p1) +
+              ', p2=' + str(p2) +
+              ', p3=' +str(p3))
     plt.legend(['S','I','R'])
     plt.show()
 
     
 def SUAR(p1,p2,p3, p4, p5 ,S0,U0,A0,R0,i):
 
-    vect_initial = np.array([S0,U0,A0,R0]).T # vector of day index, suseptable, infected and recovered people
+    vect_initial = np.array([S0,U0,A0,R0]).T
     
     output = pd.DataFrame(columns = ['day', 'S', 'U','A', 'R'])
     j = 0
@@ -46,8 +48,8 @@ def SUAR(p1,p2,p3, p4, p5 ,S0,U0,A0,R0,i):
         R = vect[3]
         vectplus1[0] = S -p1*S*(A+U) + p2*U
         vectplus1[1] = U +p1*S*(A+U) - p2*U - p3*U
-        vectplus1[2] = A +p3*U + p4*(A+U)*R - p5*A
-        vectplus1[3] = R + p5*A -p4*(A+U)*R
+        vectplus1[2] = A +p3*U + p5*(A+U)*R - p4*A
+        vectplus1[3] = R + p4*A -p5*(A+U)*R
         output.loc[j] = np.concatenate((np.array([j]),vectplus1.T))
         vect = vectplus1.copy()
         j+=1
@@ -56,7 +58,11 @@ def SUAR(p1,p2,p3, p4, p5 ,S0,U0,A0,R0,i):
     plt.plot(output['day'],output['U'])
     plt.plot(output['day'],output['A'])
     plt.plot(output['day'],output['R'])
-    plt.title('p1=' + str(p1) + ', p2=' + str(p2) + ', p3=' +str(p3) + ', p4=' +str(p4) + ', p5=' +str(p5))
+    plt.title('p1=' + str(p1) +
+              ', p2=' + str(p2) +
+              ', p3=' +str(p3) +
+              ', p4=' +str(p4) +
+              ', p5=' +str(p5))
     plt.legend(['S','U','A','R'])
     plt.show()
 
@@ -95,8 +101,8 @@ def SUAR_20(aging_rate,birth_rate,death_rate, I, P, X0, steps):
     
                 Xn[i][0] = s - (s * P[i][0] * interaction_neg) + t * P[i][1] * interaction_pos
                 Xn[i][1] = t + (s * P[i][0] * interaction_neg) - t * P[i][1] * interaction_pos - t * P[i][2]
-                Xn[i][2] = a + t * P[i][2] + r * P[i][3] * interaction_neg - a * P[i][4] * interaction_pos
-                Xn[i][3] = r - r * P[i][3] * interaction_neg + a * P[i][4] * interaction_pos
+                Xn[i][2] = a + t * P[i][2] + r * P[i][4] * interaction_neg - a * P[i][3] * interaction_pos
+                Xn[i][3] = r - r * P[i][4] * interaction_neg + a * P[i][3] * interaction_pos
     
                 i += 1
     
@@ -110,7 +116,7 @@ def SUAR_20(aging_rate,birth_rate,death_rate, I, P, X0, steps):
                 while j < n_status:
                      if i == 0:
                             if j == 0:
-                                Xn_aged[i][j] = Xn[i][j] * (1 - aging_rate - death_rate[i][j]) + birth_rate * sum(Xn[2] + Xn[3])
+                                Xn_aged[i][j] = Xn[i][j] * (1-aging_rate-death_rate[i][j])+birth_rate*sum(Xn[2]+ Xn[3])
                      j += 1           
                 i+=1
 
@@ -118,7 +124,7 @@ def SUAR_20(aging_rate,birth_rate,death_rate, I, P, X0, steps):
 
 def SUAR_5(p1,p2,p3, p4, p5,b,d,S0,U0,A0,R0,i):
 
-    vect_initial = np.array([S0,U0,A0,R0]).T # vector of day index, suseptable, infected and recovered people
+    vect_initial = np.array([S0,U0,A0,R0]).T
     
     output = pd.DataFrame(columns = ['day', 'S', 'U','A', 'R'])
     j = 0
@@ -132,8 +138,8 @@ def SUAR_5(p1,p2,p3, p4, p5,b,d,S0,U0,A0,R0,i):
         R = vect[3]
         vectplus1[0] = S - p1*S*(A+U) + p2*U*(S+R)  - d[0]*S + b*(S+U+A+R) 
         vectplus1[1] = U + p1*S*(A+U) - p2*U*(S+R) - p3*U - d[1]*U
-        vectplus1[2] = A + p3*U + p4*(A+U)*R - p5*A*(R+S) - d[2]*A
-        vectplus1[3] = R + p5*A*(S+R) - p4*(A+U)*R - d[3]*R
+        vectplus1[2] = A + p3*U + p5*(A+U)*R - p4*A*(R+S) - d[2]*A
+        vectplus1[3] = R + p4*A*(S+R) - p5*(A+U)*R - d[3]*R
 
         output.loc[j] = np.concatenate((np.array([j]),vectplus1.T))
         vect = vectplus1.copy()
@@ -144,14 +150,18 @@ def SUAR_5(p1,p2,p3, p4, p5,b,d,S0,U0,A0,R0,i):
     plt.plot(output['day'],output['U']/output['pop'])
     plt.plot(output['day'],output['A']/output['pop'])
     plt.plot(output['day'],output['R']/output['pop'])
-    plt.title('Portion: p1=' + str(p1) + ', p2=' + str(p2) + ', p3=' +str(p3) + ', p4=' +str(p4) + ', p5=' +str(p5))
+    plt.title('Portion: p1=' + str(p1) +
+              ', p2=' + str(p2) +
+              ', p3=' +str(p3) +
+              ', p4=' +str(p4) +
+              ', p5=' +str(p5))
     plt.legend(['S','U','A','R'])
     plt.show()
 
 def SUAR_norm(p1,p2,p3, p4, p5,d,S0,U0,A0,R0,i,h, plot = True):
 
-    vect_initial = np.array([S0,U0,A0,R0]).T # vector of day index, suseptable, infected and recovered people
-    
+    vect_initial = np.array([S0,U0,A0,R0]).T
+
     output = pd.DataFrame(columns = ['day', 's', 'u','a', 'r'])
     j = 0
     vect = vect_initial.copy()
@@ -167,10 +177,10 @@ def SUAR_norm(p1,p2,p3, p4, p5,d,S0,U0,A0,R0,i,h, plot = True):
         u = vect[1]
         a = vect[2]
         r = vect[3]
-        vectplus1[0] = s +h*((-s*p1*(u+a)+u*p2*(s+r)  -ds*s + 1)-s *(1 - ds*s - du*u - da*a - dr*r)) 
-        vectplus1[1] = u +h*((s*p1*(u+a)-u*p2*(s+r) - u*p3 -du*u )-u*(1 - ds*s - du*u - da*a - dr*r))
-        vectplus1[2] = a +h*((u*p3 -a*p4*(s+r) + r*p5*(u+a) -da*a )-a*(1 - ds*s - du*u - da*a - dr*r))
-        vectplus1[3] = r +h*((a*p4*(s+r) - r*p5*(u+a) -dr*r )-r*(1 - ds*s -du*u - da*a - dr*r))
+        vectplus1[0] = s+h*((-s*p1*(u+a)+u*p2*(s+r) -ds*s + 1)-s *(1 - ds*s - du*u - da*a - dr*r))
+        vectplus1[1] = u+h*((s*p1*(u+a)-u*p2*(s+r) - u*p3 -du*u )-u*(1 - ds*s - du*u - da*a - dr*r))
+        vectplus1[2] = a+h*((u*p3 -a*p4*(s+r) + r*p5*(u+a) -da*a )-a*(1 - ds*s - du*u - da*a - dr*r))
+        vectplus1[3] = r+h*((a*p4*(s+r) - r*p5*(u+a) -dr*r )-r*(1 - ds*s -du*u - da*a - dr*r))
         output.loc[j] = np.concatenate((np.array([j*h]),vectplus1.T))
         vect = vectplus1.copy()
         j+=1
@@ -179,7 +189,11 @@ def SUAR_norm(p1,p2,p3, p4, p5,d,S0,U0,A0,R0,i,h, plot = True):
         plt.plot(output['day'],output['u'])
         plt.plot(output['day'],output['a'])
         plt.plot(output['day'],output['r'])
-        plt.title('Portion: p1=' + str(p1) + ', p2=' + str(p2) + ', p3=' +str(p3) + ', p4=' +str(p4) + ', p5=' +str(p5))
+        plt.title('Portion: p1=' + str(p1) +
+                  ', p2=' + str(p2) +
+                  ', p3=' +str(p3) +
+                  ', p4=' +str(p4) +
+                  ', p5=' +str(p5))
         plt.legend(['S','U','A','R'])
         plt.show()
         return
